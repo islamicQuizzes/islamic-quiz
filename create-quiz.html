@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>دروستکردنی تاقیکردنەوە - پرسیار لە ئێمە و وەڵام لە تۆ</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <header class="quiz-header">
+
+            <div class="logo">
+                پرسیار لە ئێمە و وەڵام لە تۆ
+            </div>
+
+            <a href="index.html">
+                سەرەکی
+            </a>
+
+        </header>
+
+
+        <main class="create-content">
+
+            <h1>
+                دروستکردنی تاقیکردنەوە
+            </h1>
+
+            <p class="subtitle">
+                پرسیارەکانت دروست بکە و تاقیکردنەوەکەت ئامادە بکە.
+            </p>
+
+
+            <div class="quiz-form">
+
+                <label for="quiz-title">
+                    ناونیشانی تاقیکردنەوە
+                </label>
+
+                <input
+                    type="text"
+                    id="quiz-title"
+                    placeholder="نموونە: تەجوید - وانەی یەکەم"
+                >
+
+
+                <label for="quiz-description">
+                    پێناسە
+                </label>
+
+                <textarea
+                    id="quiz-description"
+                    placeholder="کورتە پێناسەیەک بنووسە..."
+                ></textarea>
+
+
+                <!-- Quiz Settings -->
+
+                <div class="quiz-settings">
+
+                    <div class="questions-header">
+
+                        <h2>
+                            ڕێکخستنەکانی تاقیکردنەوە
+                        </h2>
+
+                    </div>
+
+
+                    <!-- Points -->
+
+                    <label for="points-per-question">
+                        خاڵ بۆ هەر پرسیارێک
+                    </label>
+
+                    <select id="points-per-question">
+
+                        <option value="1">
+                            ١ خاڵ
+                        </option>
+
+                        <option value="2">
+                            ٢ خاڵ
+                        </option>
+
+                        <option value="5">
+                            ٥ خاڵ
+                        </option>
+
+                        <option value="10">
+                            ١٠ خاڵ
+                        </option>
+
+                    </select>
+
+
+                    <!-- Question Display -->
+
+                    <label for="question-display-mode">
+                        شێوازی پیشاندانی پرسیارەکان
+                    </label>
+
+                    <select id="question-display-mode">
+
+                        <option value="oneByOne">
+                            یەک بە یەک
+                        </option>
+
+                        <option value="all">
+                            هەموو پرسیارەکان
+                        </option>
+
+                    </select>
+
+
+                    <!-- Timer -->
+
+                    <label for="timer-per-question">
+                        کاتی هەر پرسیارێک
+                    </label>
+
+                    <select id="timer-per-question">
+
+                        <option value="15">
+                            ١٥ چرکە
+                        </option>
+
+                        <option value="20">
+                            ٢٠ چرکە
+                        </option>
+
+                        <option value="40">
+                            ٤٠ چرکە
+                        </option>
+
+                        <option value="60">
+                            ٦٠ چرکە
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="questions-header">
+
+                    <h2>
+                        پرسیارەکان
+                    </h2>
+
+                    <span id="question-count">
+                        ٠ پرسیار
+                    </span>
+
+                </div>
+
+
+                <div id="questions"></div>
+
+
+                <button
+                    id="add-question"
+                    class="secondary-btn">
+
+                    + زیادکردنی پرسیار
+
+                </button>
+
+
+                <button
+                    id="create-quiz"
+                    class="primary-btn create-btn">
+
+                    دروستکردنی تاقیکردنەوە
+
+                </button>
+
+
+                <div
+                    id="quiz-link-box"
+                    style="display: none; margin-top: 25px;">
+
+                    <h2 style="margin-bottom: 10px;">
+
+                        تاقیکردنەوەکە بە سەرکەوتوویی دروست کرا!
+
+                    </h2>
+
+
+                    <p style="margin-bottom: 10px;">
+
+                        ئەم بەستەرە بنێرە بۆ خوێندکارەکان:
+
+                    </p>
+
+
+                    <input
+                        type="text"
+                        id="quiz-link"
+                        readonly
+                    >
+
+
+                    <div class="link-buttons">
+
+                        <button
+                            id="copy-link"
+                            class="primary-btn create-btn">
+
+                            کۆپی کردنی بەستەر
+
+                        </button>
+
+
+                        <button
+                            id="open-quiz"
+                            class="secondary-btn create-btn">
+
+                            کردنەوەی تاقیکردنەوە
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script type="module">
+
+        import {
+            database,
+            auth
+        } from "./js/firebase.js";
+
+        import {
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+        import {
+            ref,
+            push,
+            set
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+        /*
+         * Authentication
+         */
+
+        onAuthStateChanged(
+            auth,
+            function (user) {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+        );
+
+
+        let questionNumber = 0;
+
+
+        const questionsContainer =
+            document.getElementById("questions");
+
+
+        const questionCount =
+            document.getElementById("question-count");
+
+
+        /*
+         * Add question
+         */
+
+        document
+            .getElementById("add-question")
+            .addEventListener(
+                "click",
+                function () {
+
+                    questionNumber++;
+
+
+                    const question =
+                        document.createElement("div");
+
+
+                    question.className =
+                        "question-card";
+
+
+                    question.innerHTML = `
+
+                        <div class="question-top">
+
+                            <h3>
+                                پرسیاری ${questionNumber}
+                            </h3>
+
+                        </div>
+
+
+                        <input
+                            type="text"
+                            placeholder="پرسیارەکەت بنووسە..."
+                            class="question-input"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="وەڵامی A"
+                            class="answer-input"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="وەڵامی B"
+                            class="answer-input"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="وەڵامی C"
+                            class="answer-input"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="وەڵامی D"
+                            class="answer-input"
+                        >
+
+
+                        <label class="correct-label">
+
+                            وەڵامی ڕاست:
+
+                        </label>
+
+
+                        <select class="correct-answer">
+
+                            <option value="A">
+                                وەڵامی A
+                            </option>
+
+                            <option value="B">
+                                وەڵامی B
+                            </option>
+
+                            <option value="C">
+                                وەڵامی C
+                            </option>
+
+                            <option value="D">
+                                وەڵامی D
+                            </option>
+
+                        </select>
+
+                    `;
+
+
+                    questionsContainer.appendChild(
+                        question
+                    );
+
+
+                    questionCount.textContent =
+                        questionNumber === 1
+                            ? "١ پرسیار"
+                            : questionNumber + " پرسیار";
+
+                }
+            );
+
+
+        /*
+         * Create quiz
+         */
+
+        document
+            .getElementById("create-quiz")
+            .addEventListener(
+                "click",
+                async function () {
+
+                    const title =
+                        document
+                            .getElementById("quiz-title")
+                            .value
+                            .trim();
+
+
+                    const description =
+                        document
+                            .getElementById("quiz-description")
+                            .value
+                            .trim();
+
+
+                    /*
+                     * Quiz settings
+                     */
+
+                    const pointsPerQuestion =
+                        Number(
+                            document
+                                .getElementById(
+                                    "points-per-question"
+                                )
+                                .value
+                        );
+
+
+                    const questionDisplayMode =
+                        document
+                            .getElementById(
+                                "question-display-mode"
+                            )
+                            .value;
+
+
+                    const timerPerQuestion =
+                        Number(
+                            document
+                                .getElementById(
+                                    "timer-per-question"
+                                )
+                                .value
+                        );
+
+
+                    const questions = [];
+
+
+                    const answerKeys = [];
+
+
+                    const questionCards =
+                        document.querySelectorAll(
+                            ".question-card"
+                        );
+
+
+                    if (title === "") {
+
+                        alert(
+                            "تکایە ناونیشانی تاقیکردنەوە بنووسە."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (questionCards.length === 0) {
+
+                        alert(
+                            "تکایە لانیکەم یەک پرسیار زیاد بکە."
+                        );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Collect questions
+                     */
+
+                    questionCards.forEach(
+                        function (card) {
+
+                            const question =
+                                card
+                                    .querySelector(
+                                        ".question-input"
+                                    )
+                                    .value
+                                    .trim();
+
+
+                            const answers =
+                                card.querySelectorAll(
+                                    ".answer-input"
+                                );
+
+
+                            const correctAnswer =
+                                card
+                                    .querySelector(
+                                        ".correct-answer"
+                                    )
+                                    .value;
+
+
+                            /*
+                             * Public question data
+                             *
+                             * IMPORTANT:
+                             * No correctAnswer here.
+                             */
+
+                            questions.push({
+
+                                question:
+                                    question,
+
+                                answerA:
+                                    answers[0]
+                                        .value
+                                        .trim(),
+
+                                answerB:
+                                    answers[1]
+                                        .value
+                                        .trim(),
+
+                                answerC:
+                                    answers[2]
+                                        .value
+                                        .trim(),
+
+                                answerD:
+                                    answers[3]
+                                        .value
+                                        .trim()
+
+                            });
+
+
+                            /*
+                             * Private answer key
+                             */
+
+                            answerKeys.push(
+                                correctAnswer
+                            );
+
+                        }
+                    );
+
+
+                    try {
+
+                        /*
+                         * Create quiz
+                         */
+
+                        const quizzesRef =
+                            ref(
+                                database,
+                                "quizzes"
+                            );
+
+
+                        const newQuizRef =
+                            push(quizzesRef);
+
+
+                        const quizId =
+                            newQuizRef.key;
+
+
+                        /*
+                         * Save public quiz
+                         */
+
+                        await set(
+                            newQuizRef,
+                            {
+
+                                title:
+                                    title,
+
+                                description:
+                                    description,
+
+                                questions:
+                                    questions,
+
+                                /*
+                                 * Quiz settings
+                                 */
+
+                                pointsPerQuestion:
+                                    pointsPerQuestion,
+
+                                questionDisplayMode:
+                                    questionDisplayMode,
+
+                                timerPerQuestion:
+                                    timerPerQuestion,
+
+                                createdAt:
+                                    Date.now()
+
+                            }
+                        );
+
+
+                        /*
+                         * Save private answer key
+                         */
+
+                        const answerKeyRef =
+                            ref(
+                                database,
+                                "answerKeys/" +
+                                quizId
+                            );
+
+
+                        await set(
+                            answerKeyRef,
+                            answerKeys
+                        );
+
+
+                        /*
+                         * Create quiz link
+                         */
+
+                        const quizLink =
+                            window.location.origin +
+                            window.location.pathname
+                                .replace(
+                                    "create-quiz.html",
+                                    "quiz.html"
+                                ) +
+                            "?id=" +
+                            encodeURIComponent(quizId);
+
+
+                        document
+                            .getElementById(
+                                "quiz-link"
+                            )
+                            .value =
+                            quizLink;
+
+
+                        document
+                            .getElementById(
+                                "quiz-link-box"
+                            )
+                            .style.display =
+                            "block";
+
+
+                        /*
+                         * Automatically copy link
+                         */
+
+                        try {
+
+                            await navigator
+                                .clipboard
+                                .writeText(
+                                    quizLink
+                                );
+
+
+                            document
+                                .getElementById(
+                                    "copy-link"
+                                )
+                                .textContent =
+                                "بەستەرەکە کۆپی کرا!";
+
+                        } catch (copyError) {
+
+                            console.log(
+                                "Clipboard permission:",
+                                copyError
+                            );
+
+                        }
+
+
+                        console.log(
+                            "Quiz ID:",
+                            quizId
+                        );
+
+
+                        console.log(
+                            "Quiz Link:",
+                            quizLink
+                        );
+
+
+                        console.log(
+                            "Quiz settings saved:",
+                            {
+                                pointsPerQuestion:
+                                    pointsPerQuestion,
+
+                                questionDisplayMode:
+                                    questionDisplayMode,
+
+                                timerPerQuestion:
+                                    timerPerQuestion
+                            }
+                        );
+
+
+                        console.log(
+                            "Answer keys saved privately."
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            "هەڵە لە دروستکردنی تاقیکردنەوە:",
+                            error
+                        );
+
+
+                        alert(
+                            "کێشەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەرەوە."
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /*
+         * Copy link
+         */
+
+        document
+            .getElementById("copy-link")
+            .addEventListener(
+                "click",
+                async function () {
+
+                    const link =
+                        document
+                            .getElementById(
+                                "quiz-link"
+                            )
+                            .value;
+
+
+                    try {
+
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                link
+                            );
+
+
+                        this.textContent =
+                            "بەستەرەکە کۆپی کرا!";
+
+                    } catch (error) {
+
+                        alert(
+                            "کۆپیکردنی بەستەر سەرکەوتوو نەبوو."
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /*
+         * Open quiz
+         */
+
+        document
+            .getElementById("open-quiz")
+            .addEventListener(
+                "click",
+                function () {
+
+                    const link =
+                        document
+                            .getElementById(
+                                "quiz-link"
+                            )
+                            .value;
+
+
+                    window.location.href =
+                        link;
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

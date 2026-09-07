@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="ckb" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>چوونەژوورەوە - Islamic Quzily</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+    <header class="quiz-header">
+
+        <div class="logo">
+            پرسیار لە ئێمە و وەڵام لە تۆ
+        </div>
+
+        <a href="index.html">
+            سەرەکی
+        </a>
+
+    </header>
+
+
+    <main class="create-content">
+
+        <h1>
+            چوونەژوورەوەی مامۆستا
+        </h1>
+
+        <p class="subtitle">
+            تکایە زانیارییەکانی چوونەژوورەوەت بنووسە.
+        </p>
+
+
+        <div class="quiz-form">
+
+            <label for="email">
+                ئیمەیڵ
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="ئیمەیڵەکەت بنووسە"
+            >
+
+
+            <label for="password">
+                وشەی نهێنی
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="وشەی نهێنییەکەت بنووسە"
+            >
+
+
+            <button
+                id="login-button"
+                class="primary-btn create-btn">
+
+                چوونەژوورەوە
+
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script type="module">
+
+    import {
+        signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        auth
+    } from "./js/firebase.js";
+
+
+    document
+        .getElementById("login-button")
+        .addEventListener(
+            "click",
+            async function () {
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                if (email === "" || password === "") {
+
+                    alert(
+                        "تکایە ئیمەیڵ و وشەی نهێنی بنووسە."
+                    );
+
+                    return;
+
+                }
+
+
+                try {
+
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                    window.location.href =
+                        "teacher.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+
+                   alert(
+    "ئیمەیڵ یان وشەی نهێنی هەڵەیە."
+);
+
+                }
+
+            }
+        );
+
+</script>
+
+</body>
+
+</html>

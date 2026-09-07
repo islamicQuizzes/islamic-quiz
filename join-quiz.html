@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>بەژداریکردن لە تاقیکردنەوە - پرسیار لە ئێمە وەڵام لەتۆ</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <header class="quiz-header">
+
+            <div class="logo">
+پرسیار لە ئێمە وەڵام لەتۆ
+            </div>
+
+            <a href="index.html">
+                سەرەکی
+            </a>
+
+        </header>
+
+
+        <main class="create-content">
+
+            <div class="quiz-form">
+
+                <h1>
+                    بەژداریکردن لە تاقیکردنەوە
+                </h1>
+
+                <p class="subtitle">
+                    بەستەری تاقیکردنەوەکەی کە بۆت نێردراوە لێرە دابنێ.
+                </p>
+
+
+                <label for="quiz-link-input">
+                    بەستەری تاقیکردنەوە
+                </label>
+
+                <input
+                    type="text"
+                    id="quiz-link-input"
+                    placeholder="بەستەرەکە لێرە دابنێ..."
+                >
+
+
+                <button
+                    id="join-quiz"
+                    class="primary-btn create-btn">
+
+                    چوونە ناو تاقیکردنەوە
+
+                </button>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script>
+
+        document
+            .getElementById("join-quiz")
+            .addEventListener("click", function () {
+
+                const link =
+                    document
+                        .getElementById("quiz-link-input")
+                        .value
+                        .trim();
+
+
+                if (link === "") {
+
+                    alert(
+                        "تکایە بەستەری تاقیکردنەوە دابنێ."
+                    );
+
+                    return;
+                }
+
+
+                try {
+
+                    const url =
+                        new URL(link);
+
+
+                    const quizId =
+                        url.searchParams.get("id");
+
+
+                    if (!quizId) {
+
+                        alert(
+                            "بەستەری تاقیکردنەوە دروست نییە."
+                        );
+
+                        return;
+                    }
+
+
+                    window.location.href =
+                        "quiz.html?id=" +
+                        encodeURIComponent(quizId);
+
+
+                } catch (error) {
+
+                    alert(
+                        "تکایە بەستەرێکی دروست دابنێ."
+                    );
+
+                }
+                
+
+
+                
+
+            });
+
+    </script>
+
+</body>
+
+</html>
+

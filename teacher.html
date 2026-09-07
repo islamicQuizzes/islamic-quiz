@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>داشبۆردی مامۆستا - پرسیار لە ئێمە و وەڵام لە تۆ
+</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+    <!-- Header -->
+    <header class="quiz-header">
+
+        <div class="logo">
+            پرسیار لە ئێمە و وەڵام لە تۆ
+
+        </div>
+
+        <div style="
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        ">
+
+            <a href="index.html">
+                سەرەکی
+            </a>
+
+            <button
+                id="logout-button"
+                class="secondary-btn"
+                type="button">
+
+                چوونەدەرەوە
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- Dashboard -->
+    <main class="create-content">
+
+        <h1>
+            داشبۆردی مامۆستا
+        </h1>
+
+        <p class="subtitle">
+            لێرە دەتوانیت تاقیکردنەوەکانت بەڕێوە ببەیت و ئەنجامەکانی خوێندکارەکان ببینیت.
+        </p>
+
+
+        <!-- Create Quiz -->
+        <div style="margin-bottom: 25px;">
+
+            <button
+                class="primary-btn create-btn"
+                type="button"
+                onclick="window.location.href='create-quiz.html'">
+
+                + دروستکردنی تاقیکردنەوە
+
+            </button>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 35px;
+        ">
+
+            <div class="quiz-form" style="
+                margin: 0;
+                text-align: center;
+            ">
+
+                <h2
+                    id="total-quizzes"
+                    style="font-size: 30px; margin-bottom: 5px;">
+                    ٠
+                </h2>
+
+                <p>
+                    کۆی تاقیکردنەوەکان
+                </p>
+
+            </div>
+
+
+            <div class="quiz-form" style="
+                margin: 0;
+                text-align: center;
+            ">
+
+                <h2
+                    id="total-students"
+                    style="font-size: 30px; margin-bottom: 5px;">
+                    ٠
+                </h2>
+
+                <p>
+                    کۆی خوێندکاران
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Quiz History -->
+        <div style="margin-bottom: 20px;">
+
+            <h2>
+                مێژووی تاقیکردنەوەکان
+            </h2>
+
+            <p class="subtitle">
+                هەموو تاقیکردنەوە دروستکراوەکانت لێرە دەبینیت.
+            </p>
+
+        </div>
+
+
+        <!-- Quiz List -->
+        <div id="quiz-list">
+
+            <p>
+                چاوەڕێ بکە...
+            </p>
+
+        </div>
+
+        <!-- Contact Me -->
+<div class="contact-footer">
+
+    <div class="contact-decoration">
+        ❖ ✦ ❖
+    </div>
+
+    <h2>
+        پەیوەندیم پێوە بکە
+    </h2>
+
+    <p>
+        ئەگەر پێویستت بە دروستکردنی ئەپلیکەیشنی ئەندرۆید،
+        وێبسایت یان سیستەمێکی تایبەت هەیە، پەیوەندیم پێوە بکە.
+    </p>
+
+    <div class="contact-info">
+
+        <a
+            href="tel:+9647503037379"
+            class="contact-item">
+
+            ☏
+
+            <span dir="ltr">
+                750 303 7379
+            </span>
+
+        </a>
+
+
+        <a
+            href="https://www.facebook.com/kossarsherzad"
+            target="_blank"
+            class="contact-item">
+
+            فەیسبووك
+
+        </a>
+
+
+        <a
+            href="https://www.instagram.com/kossarsherzad/"
+            target="_blank"
+            class="contact-item">
+
+            ئینستاگرام
+
+        </a>
+
+
+        <a
+            href="https://www.linkedin.com/in/kossar-sherzad-332702416/"
+            target="_blank"
+            class="contact-item">
+
+            لینکید ئین
+
+        </a>
+
+    </div>
+
+    <div class="contact-decoration">
+        ❖ ✦ ❖
+    </div>
+
+    <p class="copyright">
+        دروستکردنی کۆسار شێرزاد
+    </p>
+
+</div>
+
+        
+
+    </main>
+
+</div>
+
+
+<script type="module">
+
+    import {
+        database,
+        auth
+    } from "./js/firebase.js";
+
+    import {
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        ref,
+        get,
+        remove
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+    const quizList =
+        document.getElementById("quiz-list");
+
+    const totalQuizzes =
+        document.getElementById("total-quizzes");
+
+    const totalStudents =
+        document.getElementById("total-students");
+
+
+    // Check login
+
+    onAuthStateChanged(
+        auth,
+        function (user) {
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+            }
+
+            loadQuizzes();
+
+        }
+    );
+
+
+    // Load quizzes
+
+    async function loadQuizzes() {
+
+        try {
+
+            const quizzesRef =
+                ref(
+                    database,
+                    "quizzes"
+                );
+
+            const snapshot =
+                await get(quizzesRef);
+
+
+            // No quizzes
+
+            if (!snapshot.exists()) {
+
+                totalQuizzes.textContent =
+                    "٠";
+
+                totalStudents.textContent =
+                    "٠";
+
+
+                quizList.innerHTML = `
+
+                    <div class="quiz-form">
+
+                        <h2>
+                            هیچ تاقیکردنەوەیەکت نییە
+                        </h2>
+
+                        <p class="subtitle">
+                            یەکەم تاقیکردنەوەکەت دروست بکە.
+                        </p>
+
+                        <button
+                            class="primary-btn create-btn"
+                            type="button"
+                            onclick="
+                                window.location.href='create-quiz.html'
+                            ">
+
+                            دروستکردنی تاقیکردنەوە
+
+                        </button>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            const quizzes =
+                snapshot.val();
+
+            const entries =
+                Object.entries(
+                    quizzes
+                ).reverse();
+
+
+            totalQuizzes.textContent =
+                entries.length;
+
+
+            let html = "";
+
+            let totalStudentCount = 0;
+
+
+            // Load every quiz
+
+            for (
+                const [quizId, quiz]
+                of entries
+            ) {
+
+                let studentCount = 0;
+
+
+                try {
+
+                    const resultsSnapshot =
+                        await get(
+                            ref(
+                                database,
+                                "results/" + quizId
+                            )
+                        );
+
+
+                    if (
+                        resultsSnapshot.exists()
+                    ) {
+
+                        studentCount =
+                            Object.keys(
+                                resultsSnapshot.val()
+                            ).length;
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Results error:",
+                        error
+                    );
+
+                }
+
+
+                totalStudentCount +=
+                    studentCount;
+
+
+                const questionCount =
+                    quiz.questions
+                        ? Object.keys(
+                            quiz.questions
+                        ).length
+                        : 0;
+
+
+                const createdAt =
+                    quiz.createdAt
+                        ? new Date(
+                            quiz.createdAt
+                        ).toLocaleString(
+                            "ku-IQ"
+                        )
+                        : "نەزانراو";
+
+
+                html += `
+
+                    <div
+                        class="quiz-form"
+                        style="margin-bottom: 20px;"
+                    >
+
+                        <h2>
+                            ${escapeHtml(
+                                quiz.title ||
+                                "بێ ناونیشان"
+                            )}
+                        </h2>
+
+
+                        <p class="subtitle">
+                            ${escapeHtml(
+                                quiz.description ||
+                                ""
+                            )}
+                        </p>
+
+
+                        <p>
+                            پرسیارەکان:
+                            <strong>
+                                ${questionCount}
+                            </strong>
+                        </p>
+
+
+                        <p>
+                            خوێندکاران:
+                            <strong>
+                                ${studentCount}
+                            </strong>
+                        </p>
+
+
+                        <p>
+                            دروستکراوە:
+                            <strong>
+                                ${createdAt}
+                            </strong>
+                        </p>
+
+
+                        <div style="
+                            display: flex;
+                            gap: 10px;
+                            flex-wrap: wrap;
+                            margin-top: 20px;
+                        ">
+
+
+                            <!-- Open -->
+
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="
+                                    window.location.href =
+                                    'quiz.html?id=${encodeURIComponent(quizId)}'
+                                "
+                            >
+
+                                کردنەوە
+
+                            </button>
+
+
+                            <!-- Copy Link -->
+
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="
+                                    copyQuizLink(
+                                        '${encodeURIComponent(quizId)}'
+                                    )
+                                "
+                            >
+
+                                کۆپیکردنی بەستەر
+
+                            </button>
+
+
+                            <!-- Edit -->
+
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="
+                                    window.location.href =
+                                    'edit-quiz.html?id=${encodeURIComponent(quizId)}'
+                                "
+                            >
+
+                                دەستکاریکردن
+
+                            </button>
+
+
+                            <!-- Results -->
+
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="
+                                    window.location.href =
+                                    'results.html?id=${encodeURIComponent(quizId)}'
+                                "
+                            >
+
+                                ئەنجامەکان
+
+                            </button>
+
+
+                            <!-- Delete -->
+
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="
+                                    deleteQuiz(
+                                        '${encodeURIComponent(quizId)}'
+                                    )
+                                "
+                            >
+
+                                سڕینەوە
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            totalStudents.textContent =
+                totalStudentCount;
+
+
+            quizList.innerHTML =
+                html;
+
+
+        } catch (error) {
+
+            console.error(
+                "Load quizzes error:",
+                error
+            );
+
+
+            quizList.innerHTML = `
+
+                <div class="quiz-form">
+
+                    <p>
+                        هەڵەیەک ڕوویدا لە بارکردنی تاقیکردنەوەکان.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    // Copy quiz link
+
+    window.copyQuizLink =
+        async function (
+            encodedQuizId
+        ) {
+
+            const quizId =
+                decodeURIComponent(
+                    encodedQuizId
+                );
+
+
+            const link =
+                window.location.origin +
+                window.location.pathname
+                    .replace(
+                        "teacher.html",
+                        "quiz.html"
+                    ) +
+                "?id=" +
+                encodeURIComponent(
+                    quizId
+                );
+
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    link
+                );
+
+
+                alert(
+                    "بەستەرەکە کۆپی کرا."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    link
+                );
+
+            }
+
+        };
+
+
+    // Delete quiz
+
+    window.deleteQuiz =
+        async function (
+            encodedQuizId
+        ) {
+
+            const quizId =
+                decodeURIComponent(
+                    encodedQuizId
+                );
+
+
+            const confirmed =
+                confirm(
+                    "دڵنیایت دەتەوێت ئەم تاقیکردنەوەیە بسڕیتەوە؟"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            try {
+
+                await remove(
+                    ref(
+                        database,
+                        "quizzes/" + quizId
+                    )
+                );
+
+await remove(
+    ref(
+        database,
+        "answerKeys/" + quizId
+    )
+);
+                
+
+                await remove(
+                    ref(
+                        database,
+                        "results/" + quizId
+                    )
+                );
+
+
+                alert(
+                    "تاقیکردنەوەکە سڕایەوە."
+                );
+
+
+                loadQuizzes();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Delete error:",
+                    error
+                );
+
+
+                alert(
+                    "هەڵەیەک ڕوویدا لە سڕینەوەی تاقیکردنەوەکە."
+                );
+
+            }
+
+        };
+
+
+    // Logout
+
+    document
+        .getElementById("logout-button")
+        .addEventListener(
+            "click",
+            async function () {
+
+                try {
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    window.location.href =
+                        "login.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+
+                    alert(
+                        "هەڵەیەک ڕوویدا لە چوونەدەرەوە."
+                    );
+
+                }
+
+            }
+        );
+
+
+    // Escape HTML
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+</script>
+
+</body>
+
+</html>
+

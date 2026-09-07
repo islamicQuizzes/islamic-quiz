@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="ckb" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ئەنجام - پرسیار لە ئێمە و وەڵام لە تۆ
+</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+    <header class="quiz-header">
+
+        <div class="logo">
+            پرسیار لە ئێمە و وەڵام لە تۆ
+
+        </div>
+
+        <a href="index.html">
+            سەرەکی
+        </a>
+
+    </header>
+
+
+    <main class="create-content">
+
+        <div class="result-card">
+
+            <div class="result-icon">
+                ✓
+            </div>
+
+            <h1>
+                ئەنجامی تاقیکردنەوە
+            </h1>
+
+            <p id="student-name">
+                ناوی خوێندکار
+            </p>
+
+
+            <div class="score-box">
+
+                <span>
+                    نمرەکەت
+                </span>
+
+                <strong id="score">
+                    0
+                </strong>
+
+                <small id="total">
+                    لە 0
+                </small>
+
+            </div>
+
+
+            <div
+                class="result-message"
+                id="result-message">
+
+                تاقیکردنەوەکەت بە سەرکەوتوویی تەواو کرد!
+
+            </div>
+
+
+            <button
+                class="primary-btn create-btn"
+                onclick="window.location.href='index.html'">
+
+                گەڕانەوە بۆ سەرەکی
+
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const urlParams =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const studentName =
+        urlParams.get("name");
+
+    const score =
+        urlParams.get("score");
+
+    const total =
+        urlParams.get("total");
+
+
+    if (studentName) {
+
+        document.getElementById(
+            "student-name"
+        ).textContent =
+            studentName;
+
+    }
+
+
+    if (score !== null) {
+
+        document.getElementById(
+            "score"
+        ).textContent =
+            score;
+
+    }
+
+
+    if (total !== null) {
+
+        document.getElementById(
+            "total"
+        ).textContent =
+            "لە " + total;
+
+    }
+
+
+    if (
+        score !== null &&
+        total !== null &&
+        Number(total) > 0
+    ) {
+
+        const percentage =
+            (Number(score) / Number(total)) * 100;
+
+
+        const message =
+            document.getElementById(
+                "result-message"
+            );
+
+
+        if (percentage >= 90) {
+
+            message.textContent =
+                "زۆر باشە! 👏 ئەنجامێکی نایابە.";
+
+        } else if (percentage >= 70) {
+
+            message.textContent =
+                "باشە! 👍 بەردەوام بە.";
+
+        } else if (percentage >= 50) {
+
+            message.textContent =
+                "باشە، بەڵام هێشتا دەتوانیت باشتر بیت.";
+
+        } else {
+
+            message.textContent =
+                "هەوڵێکی باش بوو. دووبارە هەوڵ بدەرەوە! 💪";
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>

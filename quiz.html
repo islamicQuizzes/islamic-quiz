@@ -1,0 +1,3603 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>تاقیکردنەوە</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+    <style>
+
+        :root {
+            --paper: #fbf4e3;
+            --paper-dark: #efe0c0;
+
+            --brown-dark: #3b2618;
+            --brown: #674832;
+            --brown-light: #9a7955;
+
+            --gold: #b08a3c;
+            --gold-light: #d7bc78;
+
+            --green: #294c3a;
+            --green-dark: #193629;
+            --green-light: #416c56;
+
+            --border: #c9ad72;
+
+            --shadow: rgba(59, 38, 24, 0.15);
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+            direction: rtl;
+            min-height: 100%;
+        }
+
+
+        body {
+            font-family: "Amozh", "Tahoma", sans-serif;
+
+            color: var(--brown-dark);
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(176, 138, 60, 0.15),
+                    transparent 45%
+                ),
+                linear-gradient(
+                    135deg,
+                    #ead9b5,
+                    #f8efd9,
+                    #ead9b5
+                );
+        }
+
+
+        .quiz-container {
+            width: 100%;
+            max-width: 900px;
+
+            min-height: 100vh;
+
+            margin: 0 auto;
+
+            padding: 25px 18px 60px;
+        }
+
+
+        .quiz-header {
+            position: relative;
+
+            text-align: center;
+
+            padding: 35px 25px 30px;
+
+            margin-bottom: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.98),
+                    rgba(244, 231, 199, 0.98)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 10px 30px var(--shadow),
+                inset 0 0 0 5px rgba(176, 138, 60, 0.06);
+        }
+
+
+        .quiz-header::before {
+            content: "❖  ✦  ❖";
+
+            display: block;
+
+            margin-bottom: 15px;
+
+            color: var(--gold);
+
+            font-size: 18px;
+
+            letter-spacing: 7px;
+        }
+
+
+        .quiz-header::after {
+            content: "❖  ✦  ❖";
+
+            display: block;
+
+            margin-top: 20px;
+
+            color: var(--gold);
+
+            font-size: 16px;
+
+            letter-spacing: 7px;
+        }
+
+
+        #quiz-title {
+            margin: 0;
+
+            color: var(--green-dark);
+
+            font-size: 38px;
+
+            font-weight: 800;
+
+            line-height: 1.5;
+
+            text-shadow:
+                1px 1px 0 rgba(176, 138, 60, 0.15);
+        }
+
+
+        #quiz-description {
+            max-width: 650px;
+
+            margin: 10px auto 0;
+
+            color: var(--brown);
+
+            font-size: 17px;
+
+            line-height: 1.9;
+        }
+
+
+        #loading {
+            padding: 40px 20px;
+
+            text-align: center;
+
+            color: var(--brown);
+
+            font-size: 18px;
+
+            background: rgba(255, 250, 239, 0.9);
+
+            border: 1px solid var(--border);
+
+            border-radius: 5px;
+        }
+
+
+        #quiz-area {
+            width: 100%;
+        }
+
+
+        #student-info {
+            position: relative;
+
+            text-align: center;
+
+            padding: 40px 35px;
+
+            margin-bottom: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.99),
+                    rgba(247, 236, 210, 0.99)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 8px 25px var(--shadow);
+
+            overflow: hidden;
+        }
+
+
+        #student-info::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 8px;
+
+            border: 1px solid rgba(176, 138, 60, 0.35);
+
+            pointer-events: none;
+        }
+
+
+        #student-info h2 {
+            position: relative;
+
+            margin-bottom: 25px;
+
+            color: var(--green-dark);
+
+            font-size: 27px;
+
+            line-height: 1.6;
+        }
+
+
+        #student-info h2::before {
+            content: "✦";
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: var(--gold);
+
+            font-size: 20px;
+        }
+
+
+        #student-name {
+            position: relative;
+
+            width: 100%;
+
+            max-width: 550px;
+
+            padding: 15px 18px;
+
+            font-family: inherit;
+
+            font-size: 17px;
+
+            color: var(--brown-dark);
+
+            background: #fffdf7;
+
+            border: 1px solid var(--border);
+
+            border-radius: 4px;
+
+            outline: none;
+
+            transition: 0.25s ease;
+
+            box-shadow:
+                inset 0 2px 5px rgba(59, 38, 24, 0.05);
+        }
+
+
+        #student-name:focus {
+            border-color: var(--gold);
+
+            box-shadow:
+                0 0 0 3px rgba(176, 138, 60, 0.15);
+        }
+
+
+        #student-name::placeholder {
+            color: #9b856a;
+        }
+
+
+        #start-quiz {
+            position: relative;
+
+            min-width: 220px;
+
+            margin-top: 22px !important;
+
+            padding: 14px 28px !important;
+
+            color: #fff8e8 !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                ) !important;
+
+            border: 1px solid var(--gold) !important;
+
+            border-radius: 4px !important;
+
+            font-family: inherit !important;
+
+            font-size: 17px !important;
+
+            font-weight: 700 !important;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 15px rgba(25, 54, 41, 0.25);
+
+            transition: 0.2s ease;
+        }
+
+
+        #start-quiz:hover {
+            transform: translateY(-2px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-light),
+                    var(--green)
+                ) !important;
+        }
+
+
+        #question-area {
+            width: 100%;
+        }
+
+
+        #question-area > div:first-child {
+            margin-bottom: 20px !important;
+
+            padding: 18px 20px;
+
+            background:
+                rgba(255, 250, 239, 0.95);
+
+            border: 1px solid var(--border);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 5px 15px var(--shadow);
+        }
+
+
+        #question-counter {
+            color: var(--green-dark);
+
+            font-size: 17px;
+        }
+
+
+        #progress-percent {
+            color: var(--gold);
+
+            font-weight: 800;
+        }
+
+
+        #progress-bar {
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--gold),
+                    var(--green)
+                ) !important;
+        }
+
+
+        /* =====================================================
+           ONE-BY-ONE TIMER
+           ===================================================== */
+
+        .timer-box {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+
+            padding: 18px 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fffaf0,
+                    #f2e4c5
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 6px 18px var(--shadow);
+        }
+
+
+        .timer-text {
+            color: var(--brown-dark);
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+
+        .timer-number {
+            min-width: 60px;
+
+            text-align: center;
+
+            color: var(--green);
+
+            font-size: 28px;
+
+            font-weight: 900;
+        }
+
+
+        .timer-number.warning {
+            color: #a53232;
+
+            animation: timerPulse 1s infinite;
+        }
+
+
+        .timer-track {
+            width: 100%;
+
+            height: 8px;
+
+            margin-top: 10px;
+
+            background: #dfcfad;
+
+            border-radius: 2px;
+
+            overflow: hidden;
+        }
+
+
+        .timer-progress {
+            width: 100%;
+
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--green),
+                    var(--gold)
+                );
+
+            border-radius: 2px;
+
+            transition: width 1s linear;
+        }
+
+
+        .timer-progress.warning {
+            background: #a53232;
+        }
+
+
+        @keyframes timerPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+        }
+
+
+        /* =====================================================
+           ALL QUESTIONS
+           ===================================================== */
+
+        #all-questions-container {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 25px;
+        }
+
+
+        .all-question-card {
+            position: relative;
+
+            padding: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.99),
+                    rgba(247, 236, 210, 0.99)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 8px 25px var(--shadow);
+        }
+
+
+        .all-question-card::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 8px;
+
+            border: 1px solid rgba(176, 138, 60, 0.3);
+
+            pointer-events: none;
+        }
+
+
+        .all-question-header {
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .all-question-number {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 45px;
+
+            height: 45px;
+
+            flex-shrink: 0;
+
+            color: #fff8e8;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 50%;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+
+        .all-question-timer {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 12px;
+
+            color: var(--green-dark);
+
+            background: #f4e7c8;
+
+            border: 1px solid var(--border);
+
+            border-radius: 4px;
+
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+
+        .all-question-timer.warning {
+            color: #a53232;
+
+            border-color: #a53232;
+        }
+
+
+        .all-question-timer.finished {
+            color: #7a5a3a;
+
+            background: #eadfc7;
+        }
+
+
+        .all-question-text {
+            position: relative;
+
+            margin-bottom: 22px;
+
+            color: var(--brown-dark);
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            line-height: 1.9;
+
+            text-align: center;
+        }
+
+
+        .all-question-answers {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 11px;
+        }
+
+
+        .all-question-answers label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-height: 60px;
+
+            padding: 14px 17px;
+
+            color: var(--brown-dark);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fffdf8,
+                    #f7edd8
+                );
+
+            border: 1px solid #cdb98d;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .all-question-answers label:hover {
+            transform: translateX(-3px);
+
+            border-color: var(--gold);
+
+            background: #fff8e8;
+
+            box-shadow:
+                4px 5px 14px rgba(59, 36, 22, 0.1);
+        }
+
+
+        .all-question-answers label.selected {
+            transform: translateX(-3px);
+
+            border: 2px solid var(--green);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf4ed,
+                    #f8f0dc
+                );
+
+            box-shadow:
+                0 5px 15px rgba(35, 73, 54, 0.15);
+        }
+
+
+        .all-question-answers input {
+            width: 20px;
+
+            height: 20px;
+
+            flex-shrink: 0;
+
+            accent-color: var(--green);
+        }
+
+
+        .all-question-answers span {
+            flex: 1;
+
+            font-size: 16px;
+
+            line-height: 1.8;
+        }
+
+
+        .all-question-card.locked {
+            opacity: 0.75;
+        }
+
+
+        .all-question-card.locked .all-question-answers label {
+            cursor: not-allowed;
+        }
+
+
+        .all-question-card.locked .all-question-answers label:hover {
+            transform: none;
+
+            border-color: #cdb98d;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fffdf8,
+                    #f7edd8
+                );
+
+            box-shadow: none;
+        }
+
+
+        .question-expired-message {
+            margin-top: 12px;
+
+            padding: 10px;
+
+            text-align: center;
+
+            color: #8b5f43;
+
+            background: #f0e3c9;
+
+            border: 1px solid #cdb98d;
+
+            border-radius: 4px;
+
+            font-size: 14px;
+        }
+
+
+        #all-submit-container {
+            margin-top: 25px;
+
+            text-align: center;
+        }
+
+
+        #all-submit-button {
+            min-width: 220px;
+
+            padding: 14px 25px;
+
+            color: #fff8e8;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                );
+
+            border: 1px solid var(--gold);
+
+            border-radius: 4px;
+
+            font-family: inherit;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 14px rgba(25, 54, 41, 0.2);
+        }
+
+
+        #all-submit-button:hover {
+            transform: translateY(-2px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-light),
+                    var(--green)
+                );
+        }
+
+
+        /* =====================================================
+           ONE-BY-ONE QUESTION
+           ===================================================== */
+
+        #question-card {
+            position: relative;
+
+            padding: 35px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.99),
+                    rgba(247, 236, 210, 0.99)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 5px;
+
+            box-shadow:
+                0 8px 25px var(--shadow);
+        }
+
+
+        #question-card::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 8px;
+
+            border: 1px solid rgba(176, 138, 60, 0.3);
+
+            pointer-events: none;
+        }
+
+
+        .question-top {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 20px !important;
+        }
+
+
+        #question-number {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 52px;
+
+            height: 52px;
+
+            color: #fff8e8;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                );
+
+            border: 2px solid var(--gold);
+
+            border-radius: 50%;
+
+            font-size: 21px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 4px 10px var(--shadow);
+        }
+
+
+        #question-text {
+            position: relative;
+
+            margin-bottom: 30px !important;
+
+            color: var(--brown-dark);
+
+            font-size: 25px !important;
+
+            font-weight: 800;
+
+            line-height: 2 !important;
+
+            text-align: center;
+        }
+
+
+        #question-text::after {
+            content: "❖";
+
+            display: block;
+
+            margin-top: 10px;
+
+            color: var(--gold);
+
+            font-size: 17px;
+        }
+
+
+        #answers-container {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 13px;
+        }
+
+
+        #answers-container label {
+            position: relative;
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            gap: 15px !important;
+
+            min-height: 68px;
+
+            padding: 16px 20px !important;
+
+            margin-bottom: 0 !important;
+
+            color: var(--brown-dark);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fffdf8,
+                    #f7edd8
+                ) !important;
+
+            border: 1px solid #cdb98d !important;
+
+            border-radius: 4px !important;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        #answers-container label:hover {
+            transform: translateX(-3px);
+
+            border-color: var(--gold) !important;
+
+            background: #fff8e8 !important;
+
+            box-shadow:
+                4px 5px 14px rgba(59, 36, 22, 0.1);
+        }
+
+
+        #answers-container label:has(input:checked) {
+            transform: translateX(-3px);
+
+            border: 2px solid var(--green) !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf4ed,
+                    #f8f0dc
+                ) !important;
+
+            box-shadow:
+                0 5px 15px rgba(35, 73, 54, 0.15);
+        }
+
+
+        #answers-container input[type="radio"] {
+            width: 21px !important;
+
+            height: 21px !important;
+
+            margin: 0 !important;
+
+            accent-color: var(--green);
+
+            flex-shrink: 0;
+        }
+
+
+        #answers-container span {
+            flex: 1;
+
+            color: var(--brown-dark);
+
+            font-size: 17px;
+
+            line-height: 1.9;
+
+            font-weight: 500;
+        }
+
+
+        #question-area > div:last-child {
+            display: flex !important;
+
+            justify-content: flex-end;
+
+            gap: 12px;
+
+            margin-top: 25px !important;
+        }
+
+
+        #next-button,
+        #submit-quiz {
+            min-width: 190px;
+
+            padding: 14px 25px !important;
+
+            color: #fff8e8 !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                ) !important;
+
+            border: 1px solid var(--gold) !important;
+
+            border-radius: 4px !important;
+
+            font-family: inherit !important;
+
+            font-size: 16px !important;
+
+            font-weight: 700 !important;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+            box-shadow:
+                0 5px 14px rgba(25, 54, 41, 0.2);
+        }
+
+
+        #next-button:hover,
+        #submit-quiz:hover {
+            transform: translateY(-2px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-light),
+                    var(--green)
+                ) !important;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .quiz-container {
+                padding: 12px 10px 40px;
+            }
+
+
+            .quiz-header {
+                padding: 25px 15px;
+
+                margin-bottom: 18px;
+            }
+
+
+            #quiz-title {
+                font-size: 28px;
+            }
+
+
+            #quiz-description {
+                font-size: 15px;
+
+                line-height: 1.8;
+            }
+
+
+            #student-info {
+                padding: 30px 18px;
+            }
+
+
+            #student-info h2 {
+                font-size: 23px;
+            }
+
+
+            #start-quiz {
+                width: 100%;
+
+                min-width: 0;
+            }
+
+
+            #question-card {
+                padding: 25px 17px;
+            }
+
+
+            #question-text {
+                font-size: 20px !important;
+
+                line-height: 1.9 !important;
+            }
+
+
+            #answers-container label {
+                min-height: 62px;
+
+                padding: 14px !important;
+
+                gap: 11px !important;
+            }
+
+
+            #answers-container span {
+                font-size: 15px;
+            }
+
+
+            .timer-box {
+                padding: 14px;
+            }
+
+
+            .timer-text {
+                font-size: 15px;
+            }
+
+
+            .timer-number {
+                min-width: 48px;
+
+                font-size: 23px;
+            }
+
+
+            .all-question-card {
+                padding: 22px 15px;
+            }
+
+
+            .all-question-text {
+                font-size: 19px;
+            }
+
+
+            .all-question-header {
+                align-items: flex-start;
+            }
+
+
+            .all-question-timer {
+                font-size: 14px;
+
+                padding: 7px 9px;
+            }
+
+
+            .all-question-answers label {
+                min-height: 58px;
+
+                padding: 12px;
+            }
+
+
+            .all-question-answers span {
+                font-size: 14px;
+            }
+
+
+            #question-area > div:last-child {
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            #next-button,
+            #submit-quiz,
+            #all-submit-button {
+                width: 100%;
+
+                min-width: 0;
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            #quiz-title {
+                font-size: 24px;
+            }
+
+
+            #question-text {
+                font-size: 18px !important;
+            }
+
+
+            #answers-container span {
+                font-size: 14px;
+            }
+
+
+            #question-number {
+                width: 45px;
+
+                height: 45px;
+
+                font-size: 18px;
+            }
+
+
+            .all-question-number {
+                width: 40px;
+
+                height: 40px;
+
+                font-size: 16px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <main class="quiz-container">
+
+
+        <header class="quiz-header quiz-title-header">
+
+            <h1 id="quiz-title">
+                تاقیکردنەوە
+            </h1>
+
+            <p id="quiz-description"></p>
+
+        </header>
+
+
+        <div id="loading">
+            چاوەڕێ بکە...
+        </div>
+
+
+        <div
+            id="quiz-area"
+            style="display: none;">
+
+
+            <section
+                id="student-info"
+                class="question-card">
+
+                <h2>
+                    ناوی خوێندکار
+                </h2>
+
+                <input
+                    type="text"
+                    id="student-name"
+                    class="question-input"
+                    placeholder="ناوی خۆت بنووسە"
+                    autocomplete="name">
+
+                <button
+                    id="start-quiz"
+                    class="primary-btn">
+
+                    دەستپێکردنی تاقیکردنەوە
+
+                </button>
+
+            </section>
+
+
+            <section
+                id="question-area"
+                style="display: none;">
+
+
+                <!-- Progress -->
+
+                <div>
+
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 8px;
+                            gap: 10px;
+                        ">
+
+                        <strong id="question-counter">
+                            پرسیاری 1 لە 1
+                        </strong>
+
+                        <span id="progress-percent">
+                            0%
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        style="
+                            width: 100%;
+                            height: 10px;
+                            background: #dfcfad;
+                            border-radius: 999px;
+                            overflow: hidden;
+                        ">
+
+                        <div
+                            id="progress-bar"
+                            style="
+                                width: 0%;
+                                height: 100%;
+                                border-radius: 999px;
+                                transition: width 0.3s ease;
+                            ">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- One-by-one timer -->
+
+                <div
+                    id="one-by-one-timer"
+                    class="timer-box">
+
+                    <div style="flex: 1;">
+
+                        <div class="timer-text">
+                            کاتی پرسیار
+                        </div>
+
+                        <div class="timer-track">
+
+                            <div
+                                id="timer-progress"
+                                class="timer-progress">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="timer-number"
+                        class="timer-number">
+
+                        15
+
+                    </div>
+
+                </div>
+
+
+                <!-- All questions -->
+
+                <div
+                    id="all-questions-container"
+                    style="display: none;">
+                </div>
+
+
+                <!-- One-by-one question -->
+
+                <div
+                    id="question-card"
+                    class="question-card">
+
+
+                    <div class="question-top">
+
+                        <span id="question-number">
+                            1
+                        </span>
+
+                    </div>
+
+
+                    <h2 id="question-text"></h2>
+
+
+                    <div id="answers-container"></div>
+
+
+                </div>
+
+
+                <!-- One-by-one navigation -->
+
+                <div
+                    id="one-by-one-navigation">
+
+                    <button
+                        id="next-button"
+                        class="primary-btn">
+
+                        پرسیاری دواتر
+
+                    </button>
+
+
+                    <button
+                        id="submit-quiz"
+                        class="primary-btn"
+                        style="display: none;">
+
+                        تەواوکردنی تاقیکردنەوە
+
+                    </button>
+
+                </div>
+
+
+                <!-- All questions submit -->
+
+                <div
+                    id="all-submit-container"
+                    style="display: none;">
+
+                    <button
+                        id="all-submit-button">
+
+                        تەواوکردنی تاقیکردنەوە
+
+                    </button>
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+    <script type="module">
+
+        import {
+            database
+        } from "./js/firebase.js";
+
+
+        import {
+            ref,
+            get,
+            push,
+            set
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+        /* =====================================================
+           QUIZ ID
+           ===================================================== */
+
+        const urlParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const quizId =
+            urlParams.get("id");
+
+
+        /* =====================================================
+           ELEMENTS
+           ===================================================== */
+
+        const loading =
+            document.getElementById("loading");
+
+
+        const quizArea =
+            document.getElementById("quiz-area");
+
+
+        const quizTitle =
+            document.getElementById("quiz-title");
+
+
+        const quizDescription =
+            document.getElementById("quiz-description");
+
+
+        const studentInfo =
+            document.getElementById("student-info");
+
+
+        const studentNameInput =
+            document.getElementById("student-name");
+
+
+        const startQuizButton =
+            document.getElementById("start-quiz");
+
+
+        const questionArea =
+            document.getElementById("question-area");
+
+
+        const questionCounter =
+            document.getElementById("question-counter");
+
+
+        const progressPercent =
+            document.getElementById("progress-percent");
+
+
+        const progressBar =
+            document.getElementById("progress-bar");
+
+
+        const questionNumber =
+            document.getElementById("question-number");
+
+
+        const questionText =
+            document.getElementById("question-text");
+
+
+        const answersContainer =
+            document.getElementById("answers-container");
+
+
+        const questionCard =
+            document.getElementById("question-card");
+
+
+        const nextButton =
+            document.getElementById("next-button");
+
+
+        const submitButton =
+            document.getElementById("submit-quiz");
+
+
+        const allQuestionsContainer =
+            document.getElementById(
+                "all-questions-container"
+            );
+
+
+        const oneByOneTimer =
+            document.getElementById(
+                "one-by-one-timer"
+            );
+
+
+        const oneByOneNavigation =
+            document.getElementById(
+                "one-by-one-navigation"
+            );
+
+
+        const allSubmitContainer =
+            document.getElementById(
+                "all-submit-container"
+            );
+
+
+        const allSubmitButton =
+            document.getElementById(
+                "all-submit-button"
+            );
+
+
+        const timerNumber =
+            document.getElementById(
+                "timer-number"
+            );
+
+
+        const timerProgress =
+            document.getElementById(
+                "timer-progress"
+            );
+
+
+        /* =====================================================
+           VARIABLES
+           ===================================================== */
+
+        let quiz = null;
+
+        let answerKeys = [];
+
+        let currentQuestion = 0;
+
+        let studentName = "";
+
+        let submitting = false;
+
+        let timer = null;
+
+        let timeLeft = 15;
+
+        let pointsPerQuestion = 1;
+
+        let questionMode = "oneByOne";
+
+        let questionTime = 15;
+
+        let allQuestionTimers = [];
+
+        let allQuestionRemainingTimes = [];
+
+        let allQuestionLocked = [];
+
+
+        /* =====================================================
+           ESCAPE HTML
+           ===================================================== */
+
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text ?? "";
+
+            return div.innerHTML;
+
+        }
+
+
+        /* =====================================================
+           CHECK QUIZ ID
+           ===================================================== */
+
+        if (!quizId) {
+
+            loading.textContent =
+                "تاقیکردنەوەکە نەدۆزرایەوە.";
+
+        } else {
+
+            loadQuiz();
+
+        }
+
+
+        /* =====================================================
+           LOAD QUIZ
+           ===================================================== */
+
+        async function loadQuiz() {
+
+            try {
+
+                const quizRef =
+                    ref(
+                        database,
+                        "quizzes/" + quizId
+                    );
+
+
+                const quizSnapshot =
+                    await get(quizRef);
+
+
+                if (!quizSnapshot.exists()) {
+
+                    loading.textContent =
+                        "تاقیکردنەوەکە نەدۆزرایەوە.";
+
+                    return;
+
+                }
+
+
+                quiz =
+                    quizSnapshot.val();
+
+
+                /* =================================================
+                   QUIZ SETTINGS
+
+                   These are saved directly by create-quiz.html
+                   and edit-quiz.html.
+                   ================================================= */
+
+                pointsPerQuestion =
+                    Number(
+                        quiz.pointsPerQuestion
+                    ) || 1;
+
+
+                questionMode =
+                    quiz.questionDisplayMode === "all"
+                        ? "all"
+                        : "oneByOne";
+
+
+                const allowedTimes =
+                    [15, 20, 40, 60];
+
+
+                questionTime =
+                    allowedTimes.includes(
+                        Number(
+                            quiz.timerPerQuestion
+                        )
+                    )
+                        ? Number(
+                            quiz.timerPerQuestion
+                        )
+                        : 15;
+
+
+                /* =================================================
+                   ANSWER KEYS
+                   ================================================= */
+
+                const answerKeyRef =
+                    ref(
+                        database,
+                        "answerKeys/" + quizId
+                    );
+
+
+                const answerKeySnapshot =
+                    await get(answerKeyRef);
+
+
+                if (!answerKeySnapshot.exists()) {
+
+                    loading.textContent =
+                        "کلیلەکانی وەڵام نەدۆزرایەوە.";
+
+                    return;
+
+                }
+
+
+                answerKeys =
+                    answerKeySnapshot.val();
+
+
+                /* =================================================
+                   CHECK QUESTIONS
+                   ================================================= */
+
+                if (
+                    !quiz.questions ||
+                    !Array.isArray(
+                        quiz.questions
+                    ) ||
+                    quiz.questions.length === 0
+                ) {
+
+                    loading.textContent =
+                        "هیچ پرسیارێک لەم تاقیکردنەوەیە نییە.";
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   DISPLAY QUIZ
+                   ================================================= */
+
+                quizTitle.textContent =
+                    quiz.title ||
+                    "تاقیکردنەوە";
+
+
+                quizDescription.textContent =
+                    quiz.description ||
+                    "";
+
+
+                loading.style.display =
+                    "none";
+
+
+                quizArea.style.display =
+                    "block";
+
+
+                /* =================================================
+                   PREVIOUS ATTEMPT
+                   ================================================= */
+
+                const completedKey =
+                    "quiz_completed_" +
+                    quizId;
+
+
+                if (
+                    localStorage.getItem(
+                        completedKey
+                    ) === "true"
+                ) {
+
+                    studentInfo.innerHTML = `
+
+                        <div
+                            style="
+                                text-align: center;
+                                padding: 20px;
+                            ">
+
+                            <h2
+                                style="
+                                    margin-bottom: 15px;
+                                ">
+
+                                ئەم تاقیکردنەوەیە
+                                پێشتر تەواو کراوە
+
+                            </h2>
+
+                            <p>
+
+                                ناتوانیت لەم وێبگەڕەوە
+                                دووبارە تاقیکردنەوەکە بکەیت.
+
+                            </p>
+
+                        </div>
+
+                    `;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Quiz loading error:",
+                    error
+                );
+
+
+                loading.textContent =
+                    "کێشەیەک ڕوویدا لە بارکردنی تاقیکردنەوەکە.";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           START QUIZ
+           ===================================================== */
+
+        startQuizButton.addEventListener(
+            "click",
+            function () {
+
+                const name =
+                    studentNameInput
+                        .value
+                        .trim();
+
+
+                if (name === "") {
+
+                    alert(
+                        "تکایە ناوی خۆت بنووسە."
+                    );
+
+                    studentNameInput.focus();
+
+                    return;
+
+                }
+
+
+                studentName =
+                    name;
+
+
+                studentInfo.style.display =
+                    "none";
+
+
+                questionArea.style.display =
+                    "block";
+
+
+                currentQuestion = 0;
+
+
+                if (
+                    questionMode === "all"
+                ) {
+
+                    startAllQuestions();
+
+                } else {
+
+                    startOneByOne();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ENTER KEY
+           ===================================================== */
+
+        studentNameInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    startQuizButton.click();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ONE-BY-ONE MODE
+           ===================================================== */
+
+        function startOneByOne() {
+
+            allQuestionsContainer.style.display =
+                "none";
+
+
+            allSubmitContainer.style.display =
+                "none";
+
+
+            oneByOneTimer.style.display =
+                "flex";
+
+
+            oneByOneNavigation.style.display =
+                "flex";
+
+
+            questionCard.style.display =
+                "block";
+
+
+            showQuestion();
+
+        }
+
+
+        /* =====================================================
+           SHOW ONE QUESTION
+           ===================================================== */
+
+        function showQuestion() {
+
+            clearTimer();
+
+
+            const questions =
+                quiz.questions;
+
+
+            const totalQuestions =
+                questions.length;
+
+
+            const question =
+                questions[
+                    currentQuestion
+                ];
+
+
+            const displayNumber =
+                currentQuestion + 1;
+
+
+            /* Progress */
+
+            questionNumber.textContent =
+                displayNumber;
+
+
+            questionCounter.textContent =
+                "پرسیاری " +
+                displayNumber +
+                " لە " +
+                totalQuestions;
+
+
+            const progress =
+                Math.round(
+                    (
+                        displayNumber /
+                        totalQuestions
+                    ) * 100
+                );
+
+
+            progressPercent.textContent =
+                progress + "%";
+
+
+            progressBar.style.width =
+                progress + "%";
+
+
+            /* Question */
+
+            questionText.innerHTML =
+                escapeHtml(
+                    question.question
+                );
+
+
+            /* Answers */
+
+            answersContainer.innerHTML =
+                "";
+
+
+            const answers = [
+
+                {
+                    value: "A",
+                    text: question.answerA
+                },
+
+                {
+                    value: "B",
+                    text: question.answerB
+                },
+
+                {
+                    value: "C",
+                    text: question.answerC
+                },
+
+                {
+                    value: "D",
+                    text: question.answerD
+                }
+
+            ];
+
+
+            answers.forEach(
+                function (answer) {
+
+                    const label =
+                        document.createElement(
+                            "label"
+                        );
+
+
+                    const radio =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    radio.type =
+                        "radio";
+
+
+                    radio.name =
+                        "current-answer";
+
+
+                    radio.value =
+                        answer.value;
+
+
+                    const text =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    text.innerHTML =
+                        escapeHtml(
+                            answer.text
+                        );
+
+
+                    label.appendChild(
+                        radio
+                    );
+
+
+                    label.appendChild(
+                        text
+                    );
+
+
+                    answersContainer.appendChild(
+                        label
+                    );
+
+
+                    const savedAnswer =
+                        getSavedAnswer(
+                            currentQuestion
+                        );
+
+
+                    if (
+                        savedAnswer ===
+                        answer.value
+                    ) {
+
+                        radio.checked =
+                            true;
+
+                    }
+
+
+                    radio.addEventListener(
+                        "change",
+                        function () {
+
+                            saveAnswer(
+                                currentQuestion,
+                                radio.value
+                            );
+
+
+                            updateAnswerStyles();
+
+                        }
+                    );
+
+                }
+            );
+
+
+            /* Buttons */
+
+            if (currentQuestion === totalQuestions - 1
+            ) {
+
+                nextButton.style.display =
+                    "none";
+
+
+                submitButton.style.display =
+                    "block";
+
+            } else {
+
+                nextButton.style.display =
+                    "block";
+
+
+                submitButton.style.display =
+                    "none";
+
+
+                     allSubmitButton.style.display =
+                    "none";
+            }
+
+
+            updateAnswerStyles();
+
+
+            startTimer();
+
+        }
+
+
+        /* =====================================================
+           ONE-BY-ONE TIMER
+           ===================================================== */
+
+        function startTimer() {
+
+            clearTimer();
+
+
+            timeLeft =
+                questionTime;
+
+
+            updateTimer();
+
+
+            timer =
+                setInterval(
+                    function () {
+
+                        timeLeft--;
+
+
+                        updateTimer();
+
+
+                        if (
+                            timeLeft <= 0
+                        ) {
+
+                            clearTimer();
+
+                            timeExpired();
+
+                        }
+
+                    },
+                    1000
+                );
+
+        }
+
+
+        /* =====================================================
+           UPDATE ONE-BY-ONE TIMER
+           ===================================================== */
+
+        function updateTimer() {
+
+            timerNumber.textContent =
+                timeLeft;
+
+
+            const percentage =
+                (
+                    timeLeft /
+                    questionTime
+                ) * 100;
+
+
+            timerProgress.style.width =
+                percentage + "%";
+
+
+            if (
+                timeLeft <= 5
+            ) {
+
+                timerNumber.classList.add(
+                    "warning"
+                );
+
+
+                timerProgress.classList.add(
+                    "warning"
+                );
+
+            } else {
+
+                timerNumber.classList.remove(
+                    "warning"
+                );
+
+
+                timerProgress.classList.remove(
+                    "warning"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CLEAR ONE-BY-ONE TIMER
+           ===================================================== */
+
+        function clearTimer() {
+
+            if (
+                timer !== null
+            ) {
+
+                clearInterval(
+                    timer
+                );
+
+                timer = null;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ONE-BY-ONE TIME EXPIRED
+           ===================================================== */
+
+        function timeExpired() {
+
+            saveAnswer(
+                currentQuestion,
+                ""
+            );
+
+
+            if (
+                currentQuestion <
+                quiz.questions.length - 1
+            ) {
+
+                currentQuestion++;
+
+
+                showQuestion();
+
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+
+            } else {
+
+                submitQuiz();
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ALL QUESTIONS MODE
+           ===================================================== */
+
+        function startAllQuestions() {
+
+            clearTimer();
+
+
+            oneByOneTimer.style.display =
+                "none";
+
+
+            oneByOneNavigation.style.display =
+                "none";
+
+
+            questionCard.style.display =
+                "none";
+
+
+            allQuestionsContainer.style.display =
+                "flex";
+
+
+            allSubmitContainer.style.display =
+                "block";
+
+
+            const totalQuestions =
+                quiz.questions.length;
+
+
+            questionCounter.textContent =
+                "هەموو " +
+                totalQuestions +
+                " پرسیارەکە";
+
+
+            progressPercent.textContent =
+                "0%";
+
+
+            progressBar.style.width =
+                "0%";
+
+
+            allQuestionTimers =
+                [];
+
+
+            allQuestionRemainingTimes =
+                [];
+
+
+            allQuestionLocked =
+                [];
+
+
+            for (
+                let i = 0;
+                i < totalQuestions;
+                i++
+            ) {
+
+                allQuestionTimers[i] =
+                    null;
+
+
+                allQuestionRemainingTimes[i] =
+                    questionTime;
+
+
+                allQuestionLocked[i] =
+                    false;
+
+            }
+
+
+            renderAllQuestions();
+
+        }
+
+
+        /* =====================================================
+           RENDER ALL QUESTIONS
+           ===================================================== */
+
+        function renderAllQuestions() {
+
+            allQuestionsContainer.innerHTML =
+                "";
+
+
+            quiz.questions.forEach(
+                function (
+                    question,
+                    index
+                ) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "all-question-card";
+
+
+                    card.id =
+                        "all-question-" +
+                        index;
+
+
+                    const savedAnswer =
+                        getSavedAnswer(
+                            index
+                        );
+
+
+                    const answers = [
+
+                        {
+                            value: "A",
+                            text: question.answerA
+                        },
+
+                        {
+                            value: "B",
+                            text: question.answerB
+                        },
+
+                        {
+                            value: "C",
+                            text: question.answerC
+                        },
+
+                        {
+                            value: "D",
+                            text: question.answerD
+                        }
+
+                    ];
+
+
+                    card.innerHTML = `
+
+                        <div class="all-question-header">
+
+                            <span
+                                class="all-question-number">
+
+                                ${index + 1}
+
+                            </span>
+
+
+                            <div
+                                class="all-question-timer"
+                                id="all-timer-${index}">
+
+                                <span>
+                                    بەبێ کات
+                                </span>
+
+                            
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="all-question-text">
+
+                            ${escapeHtml(
+                                question.question
+                            )}
+
+                        </div>
+
+
+                        <div
+                            class="all-question-answers"
+                            id="all-answers-${index}">
+
+                        </div>
+
+
+                        <div
+                            id="all-expired-${index}"
+                            style="display: none;"
+                            class="question-expired-message">
+
+                            کاتی ئەم پرسیارە تەواو بوو.
+
+                        </div>
+
+                    `;
+
+
+                    allQuestionsContainer.appendChild(
+                        card
+                    );
+
+
+                    const answerContainer =
+                        document.getElementById(
+                            "all-answers-" +
+                            index
+                        );
+
+
+                    answers.forEach(
+                        function (answer) {
+
+                            const label =
+                                document.createElement(
+                                    "label"
+                                );
+
+
+                            const radio =
+                                document.createElement(
+                                    "input"
+                                );
+
+
+                            radio.type =
+                                "radio";
+
+
+                            radio.name =
+                                "all-answer-" +
+                                index;
+
+
+                            radio.value =
+                                answer.value;
+
+
+                            const text =
+                                document.createElement(
+                                    "span"
+                                );
+
+
+                            text.innerHTML =
+                                escapeHtml(
+                                    answer.text
+                                );
+
+
+                            label.appendChild(
+                                radio
+                            );
+
+
+                            label.appendChild(
+                                text
+                            );
+
+
+                            answerContainer.appendChild(
+                                label
+                            );
+
+
+                            if (
+                                savedAnswer ===
+                                answer.value
+                            ) {
+
+                                radio.checked =
+                                    true;
+
+
+                                label.classList.add(
+                                    "selected"
+                                );
+
+                            }
+
+
+                            radio.addEventListener(
+                                "change",
+                                function () {
+
+                                    if (
+                                        allQuestionLocked[
+                                            index
+                                        ]
+                                    ) {
+
+                                        radio.checked =
+                                            false;
+
+                                        return;
+
+                                    }
+
+
+                                    saveAnswer(
+                                        index,
+                                        radio.value
+                                    );
+
+
+                                    updateAllAnswerStyles(
+                                        index
+                                    );
+
+
+                                    updateAllProgress();
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                    
+
+                }
+            );
+
+
+            updateAllProgress();
+
+        }
+
+
+        /* =====================================================
+           ALL QUESTION TIMER
+           ===================================================== */
+
+        function startAllQuestionTimer(
+            index
+        ) {
+
+            allQuestionRemainingTimes[index] =
+                questionTime;
+
+
+            updateAllQuestionTimer(
+                index
+            );
+
+
+            allQuestionTimers[index] =
+                setInterval(
+                    function () {
+
+                        if (
+                            allQuestionLocked[
+                                index
+                            ]
+                        ) {
+
+                            clearInterval(
+                                allQuestionTimers[
+                                    index
+                                ]
+                            );
+
+                            return;
+
+                        }
+
+
+                        allQuestionRemainingTimes[
+                            index
+                        ]--;
+
+
+                        updateAllQuestionTimer(
+                            index
+                        );
+
+
+                        if (
+                            allQuestionRemainingTimes[
+                                index
+                            ] <= 0
+                        ) {
+
+                            clearInterval(
+                                allQuestionTimers[
+                                    index
+                                ]
+                            );
+
+
+                            expireAllQuestion(
+                                index
+                            );
+
+                        }
+
+                    },
+                    1000
+                );
+
+        }
+
+
+        /* =====================================================
+           UPDATE ALL QUESTION TIMER
+           ===================================================== */
+
+        function updateAllQuestionTimer(
+            index
+        ) {
+
+            const timeElement =
+                document.getElementById(
+                    "all-time-" +
+                    index
+                );
+
+
+            const timerElement =
+                document.getElementById(
+                    "all-timer-" +
+                    index
+                );
+
+
+            if (
+                !timeElement ||
+                !timerElement
+            ) {
+
+                return;
+
+            }
+
+
+            timeElement.textContent =
+                allQuestionRemainingTimes[
+                    index
+                ];
+
+
+            if (
+                allQuestionRemainingTimes[
+                    index
+                ] <= 5
+            ) {
+
+                timerElement.classList.add(
+                    "warning"
+                );
+
+            } else {
+
+                timerElement.classList.remove(
+                    "warning"
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           EXPIRE ALL QUESTION
+           ===================================================== */
+
+        function expireAllQuestion(
+    index
+) {
+    if (
+        allQuestionLocked[index]
+    ) {
+        return;
+    }
+
+    allQuestionLocked[index] =
+        true;
+
+
+            saveAnswer(
+                index,
+                ""
+            );
+
+
+            const card =
+                document.getElementById(
+                    "all-question-" +
+                    index
+                );
+
+
+            const answerContainer =
+                document.getElementById(
+                    "all-answers-" +
+                    index
+                );
+
+
+            const expiredMessage =
+                document.getElementById(
+                    "all-expired-" +
+                    index
+                );
+
+
+            const timerElement =
+                document.getElementById(
+                    "all-timer-" +
+                    index
+                );
+
+
+            if (card) {
+
+                card.classList.add(
+                    "locked"
+                );
+
+            }
+
+
+            if (answerContainer) {
+
+                const radios =
+                    answerContainer.querySelectorAll(
+                        "input"
+                    );
+
+
+                radios.forEach(
+                    function (radio) {
+
+                        radio.disabled =
+                            true;
+
+                    }
+                );
+
+            }
+
+
+            if (expiredMessage) {
+
+                expiredMessage.style.display =
+                    "block";
+
+            }
+
+
+            if (timerElement) {
+
+                timerElement.classList.remove(
+                    "warning"
+                );
+
+
+                timerElement.classList.add(
+                    "finished"
+                );
+
+            }
+
+
+            updateAllProgress();
+
+        }
+
+
+        /* =====================================================
+           UPDATE ALL ANSWER STYLES
+           ===================================================== */
+
+        function updateAllAnswerStyles(
+            index
+        ) {
+
+            const container =
+                document.getElementById(
+                    "all-answers-" +
+                    index
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            const labels =
+                container.querySelectorAll(
+                    "label"
+                );
+
+
+            labels.forEach(
+                function (label) {
+
+                    const radio =
+                        label.querySelector(
+                            "input"
+                        );
+
+
+                    if (
+                        radio.checked
+                    ) {
+
+                        label.classList.add(
+                            "selected"
+                        );
+
+                    } else {
+
+                        label.classList.remove(
+                            "selected"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ALL QUESTIONS PROGRESS
+           ===================================================== */
+
+        function updateAllProgress() {
+
+            const total =
+                quiz.questions.length;
+
+
+            let answered =
+                0;
+
+
+            for (
+                let i = 0;
+                i < total;
+                i++
+            ) {
+
+                const answer =
+                    getSavedAnswer(i);
+
+
+                if (
+                    answer &&
+                    answer !== ""
+                ) {
+
+                    answered++;
+
+                }
+
+            }
+
+
+            const progress =
+                Math.round(
+                    (
+                        answered /
+                        total
+                    ) * 100
+                );
+
+
+            progressPercent.textContent =
+                progress + "%";
+
+
+            progressBar.style.width =
+                progress + "%";
+
+
+            questionCounter.textContent =
+                "وەڵامدراوە: " +
+                answered +
+                " لە " +
+                total;
+
+        }
+
+
+        /* =====================================================
+           SAVE ANSWER
+           ===================================================== */
+
+        function saveAnswer(
+            questionIndex,
+            answer
+        ) {
+
+            const key =
+                "quiz_answer_" +
+                quizId +
+                "_" +
+                questionIndex;
+
+
+            localStorage.setItem(
+                key,
+                answer
+            );
+
+        }
+
+
+        /* =====================================================
+           GET SAVED ANSWER
+           ===================================================== */
+
+        function getSavedAnswer(
+            questionIndex
+        ) {
+
+            const key =
+                "quiz_answer_" +
+                quizId +
+                "_" +
+                questionIndex;
+
+
+            return localStorage.getItem(
+                key
+            );
+
+        }
+
+
+        /* =====================================================
+           UPDATE ONE-BY-ONE ANSWER STYLES
+           ===================================================== */
+
+        function updateAnswerStyles() {
+
+            const labels =
+                answersContainer.querySelectorAll(
+                    "label"
+                );
+
+
+            labels.forEach(
+                function (label) {
+
+                    const radio =
+                        label.querySelector(
+                            "input"
+                        );
+
+
+                    if (
+                        radio.checked
+                    ) {
+
+                        label.style.borderColor =
+                            "#294c3a";
+
+
+                        label.style.background =
+                            "#edf4ed";
+
+                    } else {
+
+                        label.style.borderColor =
+                            "#cdb98d";
+
+
+                        label.style.background =
+                            "";
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           NEXT QUESTION
+           ===================================================== */
+
+        nextButton.addEventListener(
+            "click",
+            function () {
+
+                const selected =
+                    document.querySelector(
+                        'input[name="current-answer"]:checked'
+                    );
+
+
+                if (!selected) {
+
+                    alert(
+                        "تکایە یەکێک لە وەڵامەکان هەڵبژێرە."
+                    );
+
+                    return;
+
+                }
+
+
+                saveAnswer(
+                    currentQuestion,
+                    selected.value
+                );
+
+
+                clearTimer();
+
+
+                if (
+                    currentQuestion <
+                    quiz.questions.length - 1
+                ) {
+
+                    currentQuestion++;
+
+
+                    showQuestion();
+
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ONE-BY-ONE SUBMIT
+           ===================================================== */
+
+        submitButton.addEventListener(
+            "click",
+            function () {
+
+                const selected =
+                    document.querySelector(
+                        'input[name="current-answer"]:checked'
+                    );
+
+
+                if (!selected) {
+
+                    alert(
+                        "تکایە وەڵامی ئەم پرسیارە هەڵبژێرە."
+                    );
+
+                    return;
+
+                }
+
+
+                saveAnswer(
+                    currentQuestion,
+                    selected.value
+                );
+
+
+                clearTimer();
+
+
+                submitQuiz();
+
+            }
+        );
+
+
+        /* =====================================================
+           ALL QUESTIONS SUBMIT
+           ===================================================== */
+
+        allSubmitButton.addEventListener(
+            "click",
+            function () {
+
+                let unanswered =
+                    0;
+
+
+                for (
+                    let i = 0;
+                    i < quiz.questions.length;
+                    i++
+                ) {
+
+                    const answer =
+                        getSavedAnswer(i);
+
+
+                    if (
+                        !answer ||
+                        answer === ""
+                    ) {
+
+                        if (
+                            !allQuestionLocked[i]
+                        ) {
+
+                            unanswered++;
+
+                        }
+
+                    }
+
+                }
+
+
+                if (
+                    unanswered > 0
+                ) {
+
+                    alert(
+                        "تکایە هەموو پرسیارەکان وەڵام بدەوە."
+                    );
+
+                    return;
+
+                }
+
+
+                submitQuiz();
+
+            }
+        );
+
+
+        /* =====================================================
+           SUBMIT QUIZ
+           ===================================================== */
+
+        async function submitQuiz() {
+
+            if (
+                submitting
+            ) {
+
+                return;
+
+            }
+
+
+            submitting =
+                true;
+
+
+            submitButton.disabled =
+                true;
+
+
+            nextButton.disabled =
+                true;
+
+
+            allSubmitButton.disabled =
+                true;
+
+
+            submitButton.textContent =
+                "چاوەڕێ بکە...";
+
+
+            allSubmitButton.textContent =
+                "چاوەڕێ بکە...";
+
+
+            /* =================================================
+               CALCULATE SCORE
+               ================================================= */
+
+            let score =
+                0;
+
+
+            quiz.questions.forEach(
+                function (
+                    question,
+                    index
+                ) {
+
+                    const selectedAnswer =
+                        getSavedAnswer(
+                            index
+                        );
+
+
+                    if (
+                        selectedAnswer &&
+                        selectedAnswer ===
+                        answerKeys[index]
+                    ) {
+
+                        score +=
+                            pointsPerQuestion;
+
+                    }
+
+                }
+            );
+
+
+            const total =
+                quiz.questions.length *
+                pointsPerQuestion;
+
+
+            const percentage =
+                total > 0
+                    ? Math.round(
+                        (
+                            score /
+                            total
+                        ) * 100
+                    )
+                    : 0;
+
+
+            /* =================================================
+               STOP ALL TIMERS
+               ================================================= */
+
+            clearTimer();
+
+
+            allQuestionTimers.forEach(
+                function (timerId) {
+
+                    if (
+                        timerId !== null
+                    ) {
+
+                        clearInterval(
+                            timerId
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /* =================================================
+               SAVE RESULT
+               ================================================= */
+
+            try {
+
+                const resultsRef =
+                    ref(
+                        database,
+                        "results/" +
+                        quizId
+                    );
+
+
+                const newResultRef =
+                    push(
+                        resultsRef
+                    );
+
+
+                await set(
+                    newResultRef,
+                    {
+
+                        studentName:
+                            studentName,
+
+                        score:
+                            score,
+
+                        total:
+                            total,
+
+                        percentage:
+                            percentage,
+
+                        submittedAt:
+                            Date.now()
+
+                    }
+                );
+
+
+                /* =================================================
+                   MARK COMPLETED
+                   ================================================= */
+
+                localStorage.setItem(
+                    "quiz_completed_" +
+                    quizId,
+                    "true"
+                );
+
+
+                /* =================================================
+                   REMOVE SAVED ANSWERS
+                   ================================================= */
+
+                for (
+                    let i = 0;
+                    i < quiz.questions.length;
+                    i++
+                ) {
+
+                    localStorage.removeItem(
+                        "quiz_answer_" +
+                        quizId +
+                        "_" +
+                        i
+                    );
+
+                }
+
+
+                /* =================================================
+                   RESULT PAGE
+                   ================================================= */
+
+                window.location.href =
+                    "result.html" +
+                    "?name=" +
+                    encodeURIComponent(
+                        studentName
+                    ) +
+                    "&score=" +
+                    score +
+                    "&total=" +
+                    total;
+
+            } catch (error) {
+
+                console.error(
+                    "Submit error:",
+                    error
+                );
+
+
+                alert(
+                    "کێشەیەک ڕوویدا لە ناردنی ئەنجامەکە."
+                );
+
+
+                submitting =
+                    false;
+
+
+                submitButton.disabled =
+                    false;
+
+
+                nextButton.disabled =
+                    false;
+
+
+                allSubmitButton.disabled =
+                    false;
+
+
+                submitButton.textContent =
+                    "تەواوکردنی تاقیکردنەوە";
+
+
+                allSubmitButton.textContent =
+                    "تەواوکردنی تاقیکردنەوە";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
