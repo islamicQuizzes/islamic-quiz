@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        خشتەی خوێندکاران
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+</head>
+
+
+<body>
+
+<div class="quiz-container">
+
+
+    <!-- Header -->
+
+    <header class="quiz-header">
+
+        <div class="logo">
+
+            خشتەی خوێندکاران
+
+        </div>
+
+
+        <div
+            style="
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+            "
+        >
+
+            <a href="teacher.html">
+
+                داشبۆرد
+
+            </a>
+
+
+            <button
+                id="logout-button"
+                class="secondary-btn"
+                type="button"
+            >
+
+                چوونەدەرەوە
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- Content -->
+
+    <main class="create-content">
+
+
+        <h1>
+
+            خشتەی خوێندکاران
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            ناوی خوێندکار و خاڵەکەی بنووسە.
+
+        </p>
+
+        
+        <button
+    id="copy-table-button"
+    class="primary-btn create-btn"
+    type="button"
+    style="margin-bottom: 25px;"
+>
+
+    کۆپیکردنی لینکی خشتەکە
+
+</button>
+
+
+
+        <!-- Add Student -->
+
+        <div class="quiz-form">
+
+
+            <h2>
+
+                زیادکردنی خوێندکار
+
+            </h2>
+
+
+
+            <label for="student-name">
+
+                ناوی خوێندکار
+
+            </label>
+
+
+            <input
+                type="text"
+                id="student-name"
+                placeholder="بۆ نموونە: Michael"
+            >
+
+
+
+            <label for="student-point">
+
+                خاڵ
+
+            </label>
+
+
+            <input
+                type="number"
+                id="student-point"
+                placeholder="بۆ نموونە: 100"
+                min="0"
+            >
+
+
+
+            <button
+                id="add-student-button"
+                class="primary-btn create-btn"
+                type="button"
+            >
+
+                زیادکردن
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- Students -->
+
+        <div
+            style="
+                margin-top: 30px;
+            "
+        >
+
+
+            <h2>
+
+                خوێندکاران
+
+            </h2>
+
+
+            <div id="students-list">
+
+                <p>
+
+                    چاوەڕێ بکە...
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+    import {
+        database,
+        auth
+    } from "./js/firebase.js";
+
+
+    import {
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+    import {
+        ref,
+        get,
+        set,
+        remove
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+    // Elements
+
+    const studentName =
+        document.getElementById(
+            "student-name"
+        );
+
+
+    const studentPoint =
+        document.getElementById(
+            "student-point"
+        );
+
+
+    const addStudentButton =
+        document.getElementById(
+            "add-student-button"
+        );
+
+
+    const studentsList =
+        document.getElementById(
+            "students-list"
+        );
+
+        const copyTableButton =
+    document.getElementById(
+        "copy-table-button"
+    );
+
+
+
+    // Check login
+
+    onAuthStateChanged(
+        auth,
+        function (user) {
+
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            loadStudents();
+
+        }
+    );
+
+
+// Copy student table link
+
+copyTableButton.addEventListener(
+    "click",
+    async function () {
+
+        const tableUrl =
+            window.location.origin +
+            window.location.pathname
+                .replace(
+                    "students.html",
+                    "student-table.html"
+                );
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                tableUrl
+            );
+
+
+            alert(
+                "لینکی خشتەی خاڵەکان کۆپی کرا."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Copy link error:",
+                error
+            );
+
+
+            alert(
+                "نەتوانرا لینکەکە کۆپی بکرێت."
+            );
+
+        }
+
+    }
+);
+    // Add student
+
+    addStudentButton.addEventListener(
+        "click",
+        async function () {
+
+
+            const name =
+                studentName.value.trim();
+
+
+            const point =
+                studentPoint.value.trim();
+
+
+
+            if (!name) {
+
+                alert(
+                    "تکایە ناوی خوێندکار بنووسە."
+                );
+
+                return;
+
+            }
+
+
+
+            if (point === "") {
+
+                alert(
+                    "تکایە خاڵی خوێندکار بنووسە."
+                );
+
+                return;
+
+            }
+
+
+
+            if (Number(point) < 0) {
+
+                alert(
+                    "خاڵ ناتوانێت کەمتر لە 0 بێت."
+                );
+
+                return;
+
+            }
+
+
+
+            try {
+
+
+                const studentRef =
+                    ref(
+                        database,
+                        "StudentPoints/" + name
+                    );
+
+
+
+                await set(
+                    studentRef,
+                    {
+                        name: name,
+                        point: Number(point)
+                    }
+                );
+
+
+
+                studentName.value = "";
+
+                studentPoint.value = "";
+
+
+
+                alert(
+                    "خوێندکارەکە زیادکرا."
+                );
+
+
+
+                loadStudents();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Add student error:",
+                    error
+                );
+
+
+                alert(
+                    "هەڵەیەک ڕوویدا لە زیادکردنی خوێندکار."
+                );
+
+            }
+
+        }
+    );
+
+
+
+    // Load students
+
+    async function loadStudents() {
+
+
+        try {
+
+
+            const studentsRef =
+                ref(
+                    database,
+                    "StudentPoints"
+                );
+
+
+
+            const snapshot =
+                await get(
+                    studentsRef
+                );
+
+
+
+            if (!snapshot.exists()) {
+
+
+                studentsList.innerHTML = `
+
+                    <div class="quiz-form">
+
+                        <p>
+
+                            هیچ خوێندکارێک نییە.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+
+            const students =
+                snapshot.val();
+
+
+
+            let entries =
+                Object.entries(
+                    students
+                );
+
+
+
+            // Sort by point
+            // Highest point first
+
+            entries.sort(
+                function (a, b) {
+
+
+                    return (
+                        Number(
+                            b[1].point || 0
+                        ) -
+                        Number(
+                            a[1].point || 0
+                        )
+                    );
+
+
+                }
+            );
+
+
+
+            let html = "";
+
+
+
+            entries.forEach(
+                function (
+                    [key, student]
+                ) {
+
+
+                    html += `
+
+                        <div
+                            class="quiz-form"
+                            style="
+                                margin-bottom: 15px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                gap: 15px;
+                                flex-wrap: wrap;
+                            "
+                        >
+
+
+                            <div>
+
+                                <strong>
+
+                                    ${escapeHtml(
+                                        student.name
+                                    )}
+
+                                </strong>
+
+                            </div>
+
+
+
+                            <div>
+
+                                <strong>
+
+                                    ${student.point}
+
+                                </strong>
+
+                                خاڵ
+
+                            </div>
+
+
+
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 10px;
+                                    flex-wrap: wrap;
+                                "
+                            >
+
+
+                                <!-- Edit -->
+
+                                <button
+                                    class="primary-btn"
+                                    type="button"
+                                    onclick="
+                                        editStudent(
+                                            '${encodeURIComponent(key)}',
+                                            '${encodeURIComponent(student.name)}',
+                                            '${student.point}'
+                                        )
+                                    "
+                                >
+
+                                    دەستکاری
+
+                                </button>
+
+
+
+                                <!-- Delete -->
+
+                                <button
+                                    class="secondary-btn"
+                                    type="button"
+                                    onclick="
+                                        deleteStudent(
+                                            '${encodeURIComponent(key)}'
+                                        )
+                                    "
+                                >
+
+                                    سڕینەوە
+
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+                    `;
+
+
+                }
+            );
+
+
+
+            studentsList.innerHTML =
+                html;
+
+
+        } catch (error) {
+
+
+            console.error(
+                "Load students error:",
+                error
+            );
+
+
+            studentsList.innerHTML = `
+
+                <div class="quiz-form">
+
+                    <p>
+
+                        هەڵەیەک ڕوویدا لە بارکردنی خوێندکاران.
+
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+
+    // Edit student point
+
+    window.editStudent =
+        async function (
+            encodedKey,
+            encodedName,
+            currentPoint
+        ) {
+
+
+            const name =
+                decodeURIComponent(
+                    encodedName
+                );
+
+
+
+            const newPoint =
+                prompt(
+                    "خاڵی نوێی " +
+                    name +
+                    " بنووسە:",
+                    currentPoint
+                );
+
+
+
+            // Cancel
+
+            if (
+                newPoint === null
+            ) {
+
+                return;
+
+            }
+
+
+
+            // Empty
+
+            if (
+                newPoint.trim() === ""
+            ) {
+
+                alert(
+                    "تکایە خاڵ بنووسە."
+                );
+
+                return;
+
+            }
+
+
+
+            // Negative
+
+            if (
+                Number(newPoint) < 0
+            ) {
+
+                alert(
+                    "خاڵ ناتوانێت کەمتر لە 0 بێت."
+                );
+
+                return;
+
+            }
+
+
+
+            try {
+
+
+                const key =
+                    decodeURIComponent(
+                        encodedKey
+                    );
+
+
+
+                await set(
+                    ref(
+                        database,
+                        "StudentPoints/" + key
+                    ),
+                    {
+                        name: name,
+                        point: Number(
+                            newPoint
+                        )
+                    }
+                );
+
+
+
+                loadStudents();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Edit student error:",
+                    error
+                );
+
+
+                alert(
+                    "هەڵەیەک ڕوویدا لە دەستکاریکردنی خاڵ."
+                );
+
+            }
+
+        };
+
+
+
+    // Delete student
+
+    window.deleteStudent =
+        async function (
+            encodedName
+        ) {
+
+
+            const name =
+                decodeURIComponent(
+                    encodedName
+                );
+
+
+
+            const confirmed =
+                confirm(
+                    "دڵنیایت دەتەوێت ئەم خوێندکارە بسڕیتەوە؟"
+                );
+
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+
+            try {
+
+
+                await remove(
+                    ref(
+                        database,
+                        "StudentPoints/" +
+                        name
+                    )
+                );
+
+
+
+                loadStudents();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Delete student error:",
+                    error
+                );
+
+
+                alert(
+                    "هەڵەیەک ڕوویدا لە سڕینەوەی خوێندکار."
+                );
+
+            }
+
+        };
+
+
+
+    // Logout
+
+    document
+        .getElementById(
+            "logout-button"
+        )
+        .addEventListener(
+            "click",
+            async function () {
+
+
+                try {
+
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    window.location.href =
+                        "login.html";
+
+
+                } catch (error) {
+
+
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+
+                    alert(
+                        "هەڵەیەک ڕوویدا لە چوونەدەرەوە."
+                    );
+
+                }
+
+            }
+        );
+
+
+
+    // Escape HTML
+
+    function escapeHtml(
+        value
+    ) {
+
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

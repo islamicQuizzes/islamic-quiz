@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        خشتەی خاڵەکان
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+</head>
+
+
+<body>
+
+<div class="quiz-container">
+
+
+    <!-- Header -->
+
+    <header class="quiz-header">
+
+        <div class="logo">
+
+            خشتەی خاڵەکان
+
+        </div>
+
+
+        <div>
+
+        
+        </div>
+
+    </header>
+
+
+
+    <!-- Content -->
+
+    <main class="create-content">
+
+
+        <h1>
+
+            خشتەی خاڵەکان
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            ئەمە خشتەی ئەنجامی خوێندکارانە.
+
+        </p>
+
+
+
+        <!-- Students Table -->
+
+        <div id="students-list">
+
+            <p>
+
+                چاوەڕێ بکە...
+
+            </p>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+    import {
+        database
+    } from "./js/firebase.js";
+
+
+    import {
+        ref,
+        get
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+    const studentsList =
+        document.getElementById(
+            "students-list"
+        );
+
+
+
+    // Load students
+
+    async function loadStudents() {
+
+
+        try {
+
+
+            const studentsRef =
+                ref(
+                    database,
+                    "StudentPoints"
+                );
+
+
+            const snapshot =
+                await get(
+                    studentsRef
+                );
+
+
+
+            if (!snapshot.exists()) {
+
+
+                studentsList.innerHTML = `
+
+                    <div class="quiz-form">
+
+                        <h2>
+
+                            هیچ ئەنجامێک نییە
+
+                        </h2>
+
+
+                        <p class="subtitle">
+
+                            هێشتا هیچ خوێندکارێک زیاد نەکراوە.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+
+            const students =
+                snapshot.val();
+
+
+
+            let entries =
+                Object.entries(
+                    students
+                );
+
+
+
+            // Highest points first
+
+            entries.sort(
+                function (a, b) {
+
+                    return (
+                        Number(
+                            b[1].point || 0
+                        ) -
+                        Number(
+                            a[1].point || 0
+                        )
+                    );
+
+                }
+            );
+
+
+
+            let html = `
+
+                <div
+                    class="quiz-form"
+                    style="
+                        margin: 0;
+                        padding: 0;
+                        overflow: hidden;
+                    "
+                >
+
+            `;
+
+
+
+            entries.forEach(
+                function (
+                    [key, student],
+                    index
+                ) {
+
+
+                    html += `
+
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                width: 100%;
+                                min-height: 60px;
+                                padding: 0 20px;
+                                box-sizing: border-box;
+                                border-bottom: 1px solid #ddd;
+                                gap: 15px;
+                            "
+                        >
+
+
+                            <!-- Number -->
+
+                            <div
+                                style="
+                                    width: 35px;
+                                    text-align: left;
+                                    font-weight: bold;
+                                    flex-shrink: 0;
+                                "
+                            >
+
+                                ${index + 1}
+
+                            </div>
+
+
+
+                            <!-- Student Name -->
+
+                            <div
+                                style="
+                                    flex: 1;
+                                    text-align: right;
+                                    font-weight: bold;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                "
+                            >
+
+                                ${escapeHtml(
+                                    student.name
+                                )}
+
+                            </div>
+
+
+
+                            <!-- Point -->
+
+                            <div
+                                style="
+                                    width: 60px;
+                                    text-align: right;
+                                    font-weight: bold;
+                                    flex-shrink: 0;
+                                "
+                            >
+
+                                ${student.point}
+
+                            </div>
+
+
+                        </div>
+
+                    `;
+
+
+                }
+            );
+
+
+
+            html += `
+
+                </div>
+
+            `;
+
+
+
+            studentsList.innerHTML =
+                html;
+
+
+        } catch (error) {
+
+
+            console.error(
+                "Load students error:",
+                error
+            );
+
+
+            studentsList.innerHTML = `
+
+                <div class="quiz-form">
+
+                    <p>
+
+                        هەڵەیەک ڕوویدا لە بارکردنی خشتەکە.
+
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+
+    // Escape HTML
+
+    function escapeHtml(
+        value
+    ) {
+
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+
+    loadStudents();
+
+
+</script>
+
+
+</body>
+
+</html>
