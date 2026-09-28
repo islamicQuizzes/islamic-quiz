@@ -2,41 +2,31 @@
 <html lang="ckb" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <title>گەڕانەوە بۆ داشبۆرد</title>
 
-    <title>تێبینی و فیدباکەکان</title>
-
-    <link
-        rel="stylesheet"
-        href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <style>
-
         :root {
             --paper: #fbf4e3;
             --paper-dark: #efe0c0;
 
             --brown-dark: #3b2618;
             --brown: #674832;
-            --brown-light: #9a7955;
 
             --gold: #b08a3c;
             --gold-light: #d7bc78;
 
             --green: #294c3a;
             --green-dark: #193629;
-            --green-light: #416c56;
 
             --border: #c9ad72;
 
             --shadow: rgba(59, 38, 24, 0.15);
         }
-
 
         * {
             margin: 0;
@@ -44,23 +34,19 @@
             box-sizing: border-box;
         }
 
-
         html,
         body {
             direction: rtl;
             min-height: 100%;
         }
 
-
         body {
-
             font-family:
                 "Amozh",
                 "Tahoma",
                 sans-serif;
 
-            color:
-                var(--brown-dark);
+            color: var(--brown-dark);
 
             background:
                 radial-gradient(
@@ -76,312 +62,35 @@
                 );
         }
 
-
-        .notes-container {
-
+        .page-container {
             width: 100%;
-
             max-width: 900px;
-
             min-height: 100vh;
 
             margin: 0 auto;
 
-            padding:
-                25px 18px 60px;
+            padding: 25px 18px 60px;
         }
-
 
         /* ===============================
-           HEADER
+           BACK BUTTON
            =============================== */
 
-        .notes-header {
-
-            position: relative;
-
-            text-align: center;
-
-            padding:
-                35px 25px 30px;
-
-            margin-bottom: 25px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 250, 239, 0.98),
-                    rgba(244, 231, 199, 0.98)
-                );
-
-            border:
-                2px solid var(--gold);
-
-            border-radius: 5px;
-
-            box-shadow:
-                0 10px 30px var(--shadow),
-                inset
-                0 0 0 5px
-                rgba(176, 138, 60, 0.06);
-        }
-
-
-        .notes-header::before {
-
-            content:
-                "❖  ✦  ❖";
-
-            display: block;
-
-            margin-bottom: 15px;
-
-            color:
-                var(--gold);
-
-            font-size: 18px;
-
-            letter-spacing: 7px;
-        }
-
-
-        .notes-header::after {
-
-            content:
-                "❖  ✦  ❖";
-
-            display: block;
-
-            margin-top: 20px;
-
-            color:
-                var(--gold);
-
-            font-size: 16px;
-
-            letter-spacing: 7px;
-        }
-
-
-        .notes-header h1 {
-
-            color:
-                var(--green-dark);
-
-            font-size: 32px;
-
-            font-weight: 800;
-
-            line-height: 1.6;
-        }
-
-
-        .notes-header p {
-
-            margin-top: 8px;
-
-            color:
-                var(--brown);
-
-            font-size: 16px;
-        }
-
-
-        /* ===============================
-           LOADING
-           =============================== */
-
-        #loading {
-
-            padding: 35px 20px;
-
-            text-align: center;
-
-            color:
-                var(--brown);
-
-            font-size: 18px;
-
-            background:
-                rgba(255, 250, 239, 0.95);
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 5px;
-        }
-
-
-        /* ===============================
-           EMPTY
-           =============================== */
-
-        #empty-message {
-
-            display: none;
-
-            padding: 45px 20px;
-
-            text-align: center;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 250, 239, 0.98),
-                    rgba(247, 236, 210, 0.98)
-                );
-
-            border:
-                2px solid var(--gold);
-
-            border-radius: 5px;
-
-            box-shadow:
-                0 8px 25px var(--shadow);
-        }
-
-
-        #empty-message .empty-icon {
-
-            font-size: 45px;
-
-            margin-bottom: 15px;
-        }
-
-
-        #empty-message h2 {
-
-            color:
-                var(--green-dark);
-
-            margin-bottom: 10px;
-
-            font-size: 23px;
-        }
-
-
-        #empty-message p {
-
-            color:
-                var(--brown);
-
-            font-size: 16px;
-
-            line-height: 1.8;
-        }
-
-
-        /* ===============================
-           NOTES LIST
-           =============================== */
-
-        #notes-list {
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 20px;
-        }
-
-
-        /* ===============================
-           NOTE CARD
-           =============================== */
-
-        .note-card {
-
-            position: relative;
-
-            padding: 28px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(255, 250, 239, 0.99),
-                    rgba(247, 236, 210, 0.99)
-                );
-
-            border:
-                2px solid var(--gold);
-
-            border-radius: 5px;
-
-            box-shadow:
-                0 8px 25px var(--shadow);
-
-            overflow: hidden;
-        }
-
-
-        .note-card::before {
-
-            content: "";
-
-            position: absolute;
-
-            inset: 8px;
-
-            border:
-                1px solid
-                rgba(176, 138, 60, 0.3);
-
-            pointer-events: none;
-        }
-
-
-        /* ===============================
-           STUDENT
-           =============================== */
-
-        .note-top {
-
-            position: relative;
-
-            display: flex;
+        .back-button {
+            display: inline-flex;
 
             align-items: center;
-
-            justify-content: space-between;
-
-            gap: 15px;
-
-            padding-bottom: 18px;
-
-            margin-bottom: 18px;
-
-            border-bottom:
-                1px solid
-                rgba(176, 138, 60, 0.35);
-        }
-
-
-        .student-info {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-        }
-
-
-        .student-icon {
-
-            display: flex;
-
-            align-items: center;
-
             justify-content: center;
 
-            width: 48px;
+            gap: 10px;
 
-            height: 48px;
+            min-height: 50px;
 
-            flex-shrink: 0;
+            padding: 12px 22px;
 
-            color:
-                #fff8e8;
+            margin-bottom: 20px;
+
+            color: #fff8e8;
 
             background:
                 linear-gradient(
@@ -390,664 +99,188 @@
                     var(--green-dark)
                 );
 
-            border:
-                2px solid var(--gold);
+            border: 2px solid var(--gold);
 
-            border-radius: 50%;
+            border-radius: 10px;
 
-            font-size: 21px;
-        }
+            box-shadow:
+                0 6px 18px var(--shadow);
 
-
-        .student-name {
-
-            color:
-                var(--green-dark);
-
-            font-size: 20px;
-
-            font-weight: 800;
-        }
-
-
-        .score {
-
-            padding:
-                7px 13px;
-
-            color:
-                var(--green-dark);
-
-            background:
-                #f4e7c8;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 4px;
-
-            font-size: 15px;
-
-            font-weight: 800;
-
-            white-space: nowrap;
-        }
-
-
-        /* ===============================
-           NOTE
-           =============================== */
-
-        .note-label {
-
-            position: relative;
-
-            margin-bottom: 8px;
-
-            color:
-                var(--gold);
-
-            font-size: 15px;
-
-            font-weight: 800;
-        }
-
-
-        .note-text {
-
-            position: relative;
-
-            padding:
-                17px 18px;
-
-            color:
-                var(--brown-dark);
-
-            background:
-                rgba(255, 253, 247, 0.85);
-
-            border:
-                1px solid #cdb98d;
-
-            border-radius: 4px;
+            font-family:
+                "Amozh",
+                "Tahoma",
+                sans-serif;
 
             font-size: 17px;
+            font-weight: 700;
 
-            line-height: 2;
+            text-decoration: none;
 
-            white-space: pre-wrap;
+            cursor: pointer;
 
-            word-break: break-word;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
         }
 
+        .back-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 9px 22px var(--shadow);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #355d49,
+                    var(--green-dark)
+                );
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        .back-arrow {
+            font-size: 22px;
+            line-height: 1;
+        }
 
         /* ===============================
-           DATE
+           EMPTY PAGE
            =============================== */
 
-        .note-date {
+        .empty-page {
+            padding: 60px 25px;
 
-            position: relative;
+            text-align: center;
 
-            display: flex;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.98),
+                    rgba(244, 231, 199, 0.98)
+                );
 
-            align-items: center;
+            border: 2px solid var(--gold);
 
-            gap: 7px;
+            border-radius: 8px;
 
-            margin-top: 15px;
-
-            color:
-                var(--brown-light);
-
-            font-size: 14px;
+            box-shadow:
+                0 10px 30px var(--shadow),
+                inset
+                0 0 0 5px
+                rgba(176, 138, 60, 0.06);
         }
 
+        .empty-page::before {
+            content: "❖  ✦  ❖";
+
+            display: block;
+
+            margin-bottom: 20px;
+
+            color: var(--gold);
+
+            font-size: 18px;
+
+            letter-spacing: 7px;
+        }
+
+        .empty-page::after {
+            content: "❖  ✦  ❖";
+
+            display: block;
+
+            margin-top: 25px;
+
+            color: var(--gold);
+
+            font-size: 16px;
+
+            letter-spacing: 7px;
+        }
+
+        .empty-page h1 {
+            color: var(--green-dark);
+
+            font-size: 30px;
+
+            line-height: 1.6;
+        }
+
+        .empty-page p {
+            margin-top: 10px;
+
+            color: var(--brown);
+
+            font-size: 16px;
+
+            line-height: 1.9;
+        }
 
         /* ===============================
-           RESPONSIVE
+           MOBILE
            =============================== */
 
         @media (max-width: 600px) {
 
-            .notes-container {
-
+            .page-container {
                 padding:
-                    12px 10px 40px;
+                    15px 10px 40px;
             }
 
+            .back-button {
+                width: 100%;
+            }
 
-            .notes-header {
-
+            .empty-page {
                 padding:
-                    25px 15px;
+                    45px 18px;
             }
 
-
-            .notes-header h1 {
-
-                font-size: 26px;
+            .empty-page h1 {
+                font-size: 25px;
             }
 
-
-            .note-card {
-
-                padding: 22px 15px;
-            }
-
-
-            .note-top {
-
-                align-items: flex-start;
-
-                flex-direction: column;
-            }
-
-
-            .score {
-
-                align-self: flex-start;
-            }
-
-
-            .student-name {
-
-                font-size: 18px;
-            }
-
-
-            .note-text {
-
+            .empty-page p {
                 font-size: 15px;
-
-                line-height: 1.9;
             }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-    <main class="notes-container">
+    <main class="page-container">
+
+        <!-- BACK BUTTON -->
+        <a
+            href="teacher.html"
+            class="back-button"
+        >
+            <span class="back-arrow">→</span>
+
+            گەڕانەوە بۆ داشبۆرد
+        </a>
 
 
-        <!-- HEADER -->
-
-        <header class="notes-header">
+        <!-- PAGE -->
+        <section class="empty-page">
 
             <h1>
-                 تێبینی و فیدباکەکان
+                داشبۆردی مامۆستا
             </h1>
 
             <p>
-                تێبینییەکانی خوێندکاران
+                بۆ گەڕانەوە بۆ داشبۆردەکە،
+                دوگمەی سەرەوە بەکاربهێنە.
             </p>
 
-        </header>
-
-
-        <!-- LOADING -->
-
-        <div id="loading">
-
-            چاوەڕێ بکە...
-
-        </div>
-
-
-        <!-- EMPTY -->
-
-        <div id="empty-message">
-
-            <div class="empty-icon">
-                📝
-            </div>
-
-            <h2>
-                هیچ تێبینییەک نییە
-            </h2>
-
-            <p>
-                هێشتا هیچ خوێندکارێک تێبینی یان فیدباکی
-                خۆی نەنووسیوە.
-            </p>
-
-        </div>
-
-
-        <!-- NOTES -->
-
-        <div id="notes-list"></div>
-
+        </section>
 
     </main>
-
-
-    <script type="module">
-
-
-        /* =====================================================
-           FIREBASE
-           ===================================================== */
-
-        import {
-            database
-        } from "./js/firebase.js";
-
-
-        import {
-            ref,
-            get
-        } from
-        "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-
-        /* =====================================================
-           ELEMENTS
-           ===================================================== */
-
-        const loading =
-            document.getElementById(
-                "loading"
-            );
-
-
-        const notesList =
-            document.getElementById(
-                "notes-list"
-            );
-
-
-        const emptyMessage =
-            document.getElementById(
-                "empty-message"
-            );
-
-
-        /* =====================================================
-           ESCAPE HTML
-           ===================================================== */
-
-        function escapeHtml(text) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.textContent =
-                text ?? "";
-
-            return div.innerHTML;
-
-        }
-
-
-        /* =====================================================
-           DATE FORMAT
-           ===================================================== */
-
-        function formatDate(timestamp) {
-
-            if (!timestamp) {
-
-                return "بێبەروار";
-
-            }
-
-
-            const date =
-                new Date(
-                    Number(timestamp)
-                );
-
-
-            if (
-                isNaN(
-                    date.getTime()
-                )
-            ) {
-
-                return "بێبەروار";
-
-            }
-
-
-            return date.toLocaleString(
-                "ku-IQ",
-                {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           LOAD FEEDBACKS
-           ===================================================== */
-
-        async function loadFeedbacks() {
-
-            try {
-
-                const resultsRef =
-                    ref(
-                        database,
-                        "results"
-                    );
-
-
-                const snapshot =
-                    await get(
-                        resultsRef
-                    );
-
-
-                loading.style.display =
-                    "none";
-
-
-                if (
-                    !snapshot.exists()
-                ) {
-
-                    emptyMessage.style.display =
-                        "block";
-
-                    return;
-
-                }
-
-
-                const allResults =
-                    snapshot.val();
-
-
-                const feedbacks = [];
-
-
-                /* =================================================
-                   GO THROUGH ALL QUIZZES
-                   ================================================= */
-
-                Object.entries(
-                    allResults
-                ).forEach(
-                    function (
-                        [quizId, quizResults]
-                    ) {
-
-
-                        if (
-                            !quizResults ||
-                            typeof quizResults !==
-                            "object"
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        /* =============================================
-                           GO THROUGH RESULTS
-                           ============================================= */
-
-                        Object.entries(
-                            quizResults
-                        ).forEach(
-                            function (
-                                [resultId, result]
-                            ) {
-
-
-                                if (
-                                    !result ||
-                                    typeof result !==
-                                    "object"
-                                ) {
-
-                                    return;
-
-                                }
-
-
-                                /* =====================================
-                                   ONLY RESULTS WITH NOTES
-                                   ===================================== */
-
-                                if (
-                                    result.note &&
-                                    String(
-                                        result.note
-                                    ).trim() !== ""
-                                ) {
-
-                                    feedbacks.push({
-
-                                        quizId:
-                                            quizId,
-
-                                        resultId:
-                                            resultId,
-
-                                        studentName:
-                                            result.studentName ||
-                                            "خوێندکار",
-
-                                        note:
-                                            result.note,
-
-                                        score:
-                                            result.score ??
-                                            0,
-
-                                        total:
-                                            result.total ??
-                                            0,
-
-                                        percentage:
-                                            result.percentage ??
-                                            0,
-
-                                        submittedAt:
-                                            result.submittedAt ??
-                                            0,
-
-                                        noteUpdatedAt:
-                                            result.noteUpdatedAt ??
-                                            result.submittedAt ??
-                                            0
-
-                                    });
-
-                                }
-
-                            }
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
-                   NO FEEDBACKS
-                   ================================================= */
-
-                if (
-                    feedbacks.length === 0
-                ) {
-
-                    emptyMessage.style.display =
-                        "block";
-
-                    return;
-
-                }
-
-
-                /* =================================================
-                   NEWEST FIRST
-                   ================================================= */
-
-                feedbacks.sort(
-                    function (a, b) {
-
-                        return (
-                            Number(
-                                b.noteUpdatedAt
-                            ) -
-                            Number(
-                                a.noteUpdatedAt
-                            )
-                        );
-
-                    }
-                );
-
-
-                /* =================================================
-                   DISPLAY
-                   ================================================= */
-
-                feedbacks.forEach(
-                    function (
-                        feedback
-                    ) {
-
-                        const card =
-                            document.createElement(
-                                "article"
-                            );
-
-
-                        card.className =
-                            "note-card";
-
-
-                        card.innerHTML = `
-
-                            <div class="note-top">
-
-                               <div class="student-info">
-
-    <div class="student-name">
-
-        ${escapeHtml(
-            feedback.studentName
-        )}
-
-    </div>
-
-</div>
-
-
-                                <div class="score">
-
-                                    نمرە:
-                                    ${escapeHtml(
-                                        feedback.score
-                                    )}
-                                    /
-                                    ${escapeHtml(
-                                        feedback.total
-                                    )}
-
-                                    (${escapeHtml(
-                                        feedback.percentage
-                                    )}%)
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="note-label">
-
-                                 تێبینی خوێندکار
-
-                            </div>
-
-
-                            <div class="note-text">
-
-                                ${escapeHtml(
-                                    feedback.note
-                                )}
-
-                            </div>
-
-
-                            <div class="note-date">
-
-                                
-
-                                ${formatDate(
-                                    feedback.noteUpdatedAt
-                                )}
-
-                            </div>
-
-                        `;
-
-
-                        notesList.appendChild(
-                            card
-                        );
-
-                    }
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "Feedback loading error:",
-                    error
-                );
-
-
-                loading.style.display =
-                    "none";
-
-
-                emptyMessage.style.display =
-                    "block";
-
-
-                emptyMessage.querySelector(
-                    "h2"
-                ).textContent =
-                    "کێشەیەک ڕوویدا";
-
-
-                emptyMessage.querySelector(
-                    "p"
-                ).textContent =
-                    "نەتوانرا تێبینییەکان بار بکرێن.";
-
-            }
-
-        }
-
-
-        /* =====================================================
-           START
-           ===================================================== */
-
-        loadFeedbacks();
-
-
-    </script>
 
 </body>
 
