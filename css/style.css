@@ -153,7 +153,7 @@ a:hover {
 
     border: 2px solid #87672e;
 
-    border-radius: 4px;
+    border-radius: 15px;
 
     pointer-events: none;
 
@@ -222,7 +222,7 @@ a:hover {
 
     border: 2px solid #9b7835;
 
-    border-radius: 6px;
+    border-radius: 15px;
 
     box-shadow:
         0 10px 30px rgba(66, 43, 19, 0.18),
@@ -335,7 +335,7 @@ button {
 
     padding: 14px 28px;
 
-    border-radius: 5px;
+    border-radius: 15px;
 
     font-size: 16px;
 
@@ -498,7 +498,7 @@ footer {
 
     border: 1px solid #9d7a35;
 
-    border-radius: 4px;
+    border-radius: 15px;
 
     background:
         rgba(255, 225, 145, 0.06);
@@ -604,7 +604,7 @@ footer {
 
     border: 2px solid #a2813e;
 
-    border-radius: 5px;
+    border-radius: 15px;
 
     box-shadow:
         0 12px 28px rgba(73, 47, 18, 0.16),
@@ -628,7 +628,7 @@ footer {
 
     pointer-events: none;
 
-    border-radius: 3px;
+    border-radius: 15px;
 }
 
 
@@ -658,7 +658,7 @@ footer {
 
     border: 1px solid #ae8d4d;
 
-    border-radius: 4px;
+    border-radius: 15px;
 
     background:
         rgba(255, 249, 226, 0.9);
@@ -746,7 +746,7 @@ footer {
 
     border: 2px solid #b09355;
 
-    border-radius: 5px;
+    border-radius: 15px;
 
     background:
         linear-gradient(
@@ -944,7 +944,7 @@ footer {
 
     border: 2px solid #bda56e !important;
 
-    border-radius: 5px !important;
+    border-radius: 15px !important;
 
     background:
         linear-gradient(
@@ -1087,7 +1087,7 @@ footer {
 
     border: 1px solid #b29253;
 
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 
@@ -1120,6 +1120,263 @@ footer {
     color: #5e4529;
 
     font-size: 17px;
+}
+
+/* =====================================================
+   STUDENT NOTE
+   ===================================================== */
+
+.student-table-button {
+    display: inline-block;
+
+    margin: 5px 5px 0;
+
+    padding: 13px 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #75571f,
+            #4b3418
+        );
+
+    color: #f7df9d;
+
+    border: 1px solid #a78945;
+
+    border-radius: 15px;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.student-table-button:hover {
+    transform: translateY(-2px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #846426,
+            #573d19
+        );
+
+    color: #f8e6b2;
+
+    box-shadow:
+        0 6px 14px
+        rgba(65, 43, 17, 0.18);
+}
+
+
+.note-box {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f9edcb,
+            #ead7a8
+        );
+
+    border: 1px solid #b29253;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(65, 42, 17, 0.12);
+}
+
+
+#student-note {
+    width: 100%;
+
+    min-height: 140px;
+
+    padding: 15px;
+
+    resize: vertical;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    line-height: 1.9;
+
+    color: #4b3518;
+
+    background: #fffdf7;
+
+    border: 1px solid #b29253;
+
+    border-radius: 15px;
+
+    outline: none;
+
+    direction: rtl;
+
+    text-align: right;
+
+    transition: 0.2s ease;
+}
+
+
+#student-note:focus {
+    border-color: #79591f;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(176, 138, 60, 0.15);
+}
+
+
+#student-note::placeholder {
+    color: #9b856a;
+}
+
+
+.note-actions {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+    flex-wrap: wrap;
+}
+
+
+.note-actions button {
+    font-family: inherit;
+}
+
+
+.secondary-btn {
+    padding: 12px 24px;
+
+    color: #5e4529;
+
+    background: #eadfc7;
+
+    border: 1px solid #b29253;
+
+    border-radius: 15px;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.secondary-btn:hover {
+    background: #dfcfad;
+
+    transform: translateY(-1px);
+}
+
+
+@media (max-width: 600px) {
+
+    .student-table-button {
+        width: 100%;
+
+        margin: 5px 0;
+
+        text-align: center;
+    }
+
+
+    .note-box {
+        padding: 15px;
+    }
+
+
+    .note-actions {
+        flex-direction: column;
+    }
+
+
+    .note-actions button {
+        width: 100%;
+    }
+
+}
+
+.student-table-button {
+    display: inline-block;
+
+    margin-top: 5px;
+
+    padding: 13px 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #75571f,
+            #4b3418
+        );
+
+    color: #f7df9d;
+
+    border: 1px solid #a78945;
+
+    border-radius: 15px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.student-table-button:hover {
+    transform: translateY(-2px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #846426,
+            #573d19
+        );
+
+    color: #f8e6b2;
+
+    box-shadow:
+        0 6px 14px rgba(65, 43, 17, 0.18);
 }
 
 
@@ -1465,7 +1722,7 @@ footer {
 
     border: 1px solid #9b7835;
 
-    border-radius: 5px;
+    border-radius: 15px;
 
     background:
         linear-gradient(
