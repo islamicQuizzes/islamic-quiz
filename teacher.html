@@ -1,27 +1,660 @@
 <!DOCTYPE html>
+
 <html lang="ckb" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>داشبۆردی مامۆستا - پرسیار لە ئێمە و وەڵام لە تۆ
-</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
+    <title>
+        داشبۆردی مامۆستا - پرسیار لە ئێمە و وەڵام لە تۆ
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
+
+
+    <style>
+
+        /* =========================================================
+           TEACHER DASHBOARD ACTION BUTTONS
+           ========================================================= */
+
+        .dashboard-actions {
+
+            display: flex;
+
+            flex-direction: row;
+
+            align-items: stretch;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            width: 100%;
+
+            margin-bottom: 25px;
+        }
+
+
+        .dashboard-actions button {
+
+            flex: 1;
+
+            width: auto;
+
+            min-height: 54px;
+
+            margin: 0;
+
+            padding: 14px 20px;
+
+            border-radius: 14px;
+
+            font-family:
+                "Amozh",
+                sans-serif;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        .dashboard-actions button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 6px 14px
+                rgba(65, 43, 17, 0.18);
+        }
+
+
+        .dashboard-actions button:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+
+        /* =========================================================
+           UPDATE DIALOG OVERLAY
+           ========================================================= */
+
+        .update-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 99999;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(35, 23, 14, 0.70);
+
+            backdrop-filter:
+                blur(6px);
+
+            -webkit-backdrop-filter:
+                blur(6px);
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+        }
+
+
+        .update-overlay.show {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            pointer-events: auto;
+        }
+
+
+
+        /* =========================================================
+           UPDATE DIALOG
+           ========================================================= */
+
+        .update-dialog {
+
+            position: relative;
+
+            width: 100%;
+
+            max-width: 520px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding:
+                35px 30px 30px;
+
+            text-align: center;
+
+            color:
+                var(--brown-dark);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 250, 239, 0.99),
+                    rgba(244, 231, 199, 0.99)
+                );
+
+            border:
+                2px solid var(--gold);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(35, 23, 14, 0.40),
+
+                inset
+                0 0 0 6px
+                rgba(176, 138, 60, 0.06);
+
+            transform:
+                translateY(25px)
+                scale(0.94);
+
+            transition:
+                transform 0.35s
+                cubic-bezier(
+                    0.22,
+                    1,
+                    0.36,
+                    1
+                );
+        }
+
+
+        .update-overlay.show
+        .update-dialog {
+
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+
+
+        /* =========================================================
+           DECORATIONS
+           ========================================================= */
+
+        .update-decoration {
+
+            color:
+                var(--gold);
+
+            font-size: 20px;
+
+            letter-spacing: 7px;
+
+            line-height: 1;
+
+            margin-bottom: 18px;
+        }
+
+
+        .update-decoration.bottom {
+
+            margin-top: 25px;
+
+            margin-bottom: 0;
+        }
+
+
+
+        /* =========================================================
+           CLOSE BUTTON
+           ========================================================= */
+
+        .update-close {
+
+            position: absolute;
+
+            top: 13px;
+
+            left: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 36px;
+
+            height: 36px;
+
+            padding: 0;
+
+            color:
+                var(--brown);
+
+            background:
+                rgba(176, 138, 60, 0.08);
+
+            border:
+                1px solid
+                rgba(176, 138, 60, 0.35);
+
+            border-radius: 50%;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            font-size: 24px;
+
+            line-height: 1;
+
+            cursor: pointer;
+
+            transition:
+                all 0.2s ease;
+        }
+
+
+        .update-close:hover {
+
+            color:
+                var(--green-dark);
+
+            background:
+                rgba(176, 138, 60, 0.18);
+
+            transform:
+                rotate(90deg);
+        }
+
+
+
+        /* =========================================================
+           UPDATE ICON
+           ========================================================= */
+
+        .update-icon {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 74px;
+
+            height: 74px;
+
+            margin:
+                0 auto 18px;
+
+            color:
+                #fff8e8;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                );
+
+            border:
+                2px solid var(--gold);
+
+            border-radius: 50%;
+
+            font-size: 32px;
+
+            box-shadow:
+                0 8px 22px
+                rgba(59, 38, 24, 0.18);
+        }
+
+
+
+        /* =========================================================
+           UPDATE TITLE
+           ========================================================= */
+
+        .update-dialog h2 {
+
+            margin-bottom: 8px;
+
+            color:
+                var(--green-dark);
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            line-height: 1.5;
+        }
+
+
+        .update-version {
+
+            display: inline-block;
+
+            margin-bottom: 18px;
+
+            padding:
+                5px 13px;
+
+            color:
+                var(--green-dark);
+
+            background:
+                #f4e7c8;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+
+
+        /* =========================================================
+           UPDATE DESCRIPTION
+           ========================================================= */
+
+        .update-description {
+
+            margin-bottom: 18px;
+
+            color:
+                var(--brown);
+
+            font-size: 16px;
+
+            line-height: 1.9;
+        }
+
+
+
+        /* =========================================================
+           UPDATE LIST
+           ========================================================= */
+
+        .update-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin:
+                20px 0 25px;
+
+            text-align: right;
+        }
+
+
+        .update-item {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 11px;
+
+            padding:
+                12px 14px;
+
+            color:
+                var(--brown-dark);
+
+            background:
+                rgba(255, 253, 247, 0.78);
+
+            border:
+                1px solid
+                rgba(201, 173, 114, 0.55);
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            line-height: 1.8;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        .update-item:hover {
+
+            transform:
+                translateX(-2px);
+
+            background:
+                rgba(255, 253, 247, 0.95);
+        }
+
+
+        .update-item-icon {
+
+            flex-shrink: 0;
+
+            color:
+                var(--gold);
+
+            font-size: 18px;
+
+            line-height: 1.5;
+        }
+
+
+
+        /* =========================================================
+           OK BUTTON
+           ========================================================= */
+
+        .update-ok-button {
+
+            width: 100%;
+
+            min-height: 52px;
+
+            padding:
+                12px 20px;
+
+            color:
+                #fff8e8;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-dark)
+                );
+
+            border:
+                1px solid var(--gold);
+
+            border-radius: 999px;
+
+            font-family:
+                "Amozh",
+                "Tahoma",
+                sans-serif;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 6px 18px
+                rgba(41, 76, 58, 0.22);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .update-ok-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 9px 22px
+                rgba(41, 76, 58, 0.28);
+        }
+
+
+        .update-ok-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 700px) {
+
+            .dashboard-actions {
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            .dashboard-actions button {
+
+                width: 100%;
+
+                flex: none;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .update-overlay {
+
+                padding: 12px;
+            }
+
+
+            .update-dialog {
+
+                padding:
+                    30px 18px 22px;
+
+                border-radius: 13px;
+            }
+
+
+            .update-icon {
+
+                width: 64px;
+
+                height: 64px;
+
+                font-size: 28px;
+            }
+
+
+            .update-dialog h2 {
+
+                font-size: 24px;
+            }
+
+
+            .update-description {
+
+                font-size: 15px;
+            }
+
+
+            .update-item {
+
+                font-size: 14px;
+
+                padding:
+                    10px 11px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 
 <body>
 
+
 <div class="quiz-container">
 
-    <!-- Header -->
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
     <header class="quiz-header">
 
         <div class="logo">
+
             پرسیار لە ئێمە و وەڵام لە تۆ
 
         </div>
+
 
         <div style="
             display: flex;
@@ -31,8 +664,11 @@
         ">
 
             <a href="index.html">
+
                 سەرەکی
+
             </a>
+
 
             <button
                 id="logout-button"
@@ -48,50 +684,84 @@
     </header>
 
 
-    <!-- Dashboard -->
+
+    <!-- =========================================================
+         DASHBOARD
+         ========================================================= -->
+
     <main class="create-content">
 
+
         <h1>
+
             داشبۆردی مامۆستا
+
         </h1>
 
+
         <p class="subtitle">
-            لێرە دەتوانیت تاقیکردنەوەکانت بەڕێوە ببەیت و ئەنجامەکانی خوێندکارەکان ببینیت.
+
+            لێرە دەتوانیت تاقیکردنەوەکانت بەڕێوە ببەیت
+
+            و ئەنجامەکانی خوێندکارەکان ببینیت.
+
         </p>
 
 
-        <!-- Create Quiz -->
-        <!-- Dashboard Actions -->
-<div style="
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
-">
 
-    <button
-        class="primary-btn create-btn"
-        type="button"
-        onclick="window.location.href='create-quiz.html'">
+        <!-- =====================================================
+             DASHBOARD ACTIONS
+             ===================================================== -->
 
-        + دروستکردنی تاقیکردنەوە
-
-    </button>
+        <div class="dashboard-actions">
 
 
-    <button
-        class="secondary-btn create-btn"
-        type="button"
-        onclick="window.location.href='students.html'">
+            <!-- CREATE QUIZ -->
 
-        خشتەی قوتابیان
+            <button
+                class="primary-btn create-btn"
+                type="button"
+                onclick="window.location.href='create-quiz.html'">
 
-    </button>
+                + دروستکردنی تاقیکردنەوە
 
-</div>
+            </button>
 
 
-        <!-- Statistics -->
+
+            <!-- STUDENTS -->
+
+            <button
+                class="primary-btn create-btn"
+                type="button"
+                onclick="window.location.href='students.html'">
+
+                خشتەی قوتابیان
+
+            </button>
+
+
+
+            <!-- NOTES -->
+
+            <button
+                class="primary-btn create-btn"
+                type="button"
+                onclick="window.location.href='teacher-notes.html'">
+
+                تێبینیەکان
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =====================================================
+             STATISTICS
+             ===================================================== -->
+
         <div style="
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -99,176 +769,656 @@
             margin-bottom: 35px;
         ">
 
-            <div class="quiz-form" style="
-                margin: 0;
-                text-align: center;
-            ">
+
+            <!-- TOTAL QUIZZES -->
+
+            <div
+                class="quiz-form"
+                style="
+                    margin: 0;
+                    text-align: center;
+                ">
 
                 <h2
                     id="total-quizzes"
-                    style="font-size: 30px; margin-bottom: 5px;">
+                    style="
+                        font-size: 30px;
+                        margin-bottom: 5px;
+                    ">
+
                     ٠
+
                 </h2>
 
+
                 <p>
+
                     کۆی تاقیکردنەوەکان
+
                 </p>
 
             </div>
 
 
-            <div class="quiz-form" style="
-                margin: 0;
-                text-align: center;
-            ">
+
+            <!-- TOTAL STUDENTS -->
+
+            <div
+                class="quiz-form"
+                style="
+                    margin: 0;
+                    text-align: center;
+                ">
 
                 <h2
                     id="total-students"
-                    style="font-size: 30px; margin-bottom: 5px;">
+                    style="
+                        font-size: 30px;
+                        margin-bottom: 5px;
+                    ">
+
                     ٠
+
                 </h2>
 
+
                 <p>
+
                     کۆی خوێندکاران
+
                 </p>
 
             </div>
 
+
         </div>
 
 
-        <!-- Quiz History -->
-        <div style="margin-bottom: 20px;">
+
+        <!-- =====================================================
+             QUIZ HISTORY
+             ===================================================== -->
+
+        <div style="
+            margin-bottom: 20px;
+        ">
 
             <h2>
+
                 مێژووی تاقیکردنەوەکان
+
             </h2>
 
+
             <p class="subtitle">
-                هەموو تاقیکردنەوە دروستکراوەکانت لێرە دەبینیت.
+
+                هەموو تاقیکردنەوە دروستکراوەکانت
+
+                لێرە دەبینیت.
+
             </p>
 
         </div>
 
 
-        <!-- Quiz List -->
+
+        <!-- =====================================================
+             QUIZ LIST
+             ===================================================== -->
+
         <div id="quiz-list">
 
             <p>
+
                 چاوەڕێ بکە...
+
             </p>
 
         </div>
 
-        <!-- Contact Me -->
-<div class="contact-footer">
-
-    <div class="contact-decoration">
-        ❖ ✦ ❖
-    </div>
-
-    <h2>
-        پەیوەندیم پێوە بکە
-    </h2>
-
-    <p>
-        ئەگەر پێویستت بە دروستکردنی ئەپلیکەیشنی ئەندرۆید،
-        وێبسایت یان سیستەمێکی تایبەت هەیە، پەیوەندیم پێوە بکە.
-    </p>
-
-    <div class="contact-info">
-
-        <a
-            href="tel:+9647503037379"
-            class="contact-item">
-
-            ☏
-
-            <span dir="ltr">
-                750 303 7379
-            </span>
-
-        </a>
 
 
-        <a
-            href="https://www.facebook.com/kossarsherzad"
-            target="_blank"
-            class="contact-item">
+        <!-- =====================================================
+             CONTACT ME
+             ===================================================== -->
 
-            فەیسبووك
-
-        </a>
+        <div class="contact-footer">
 
 
-        <a
-            href="https://www.instagram.com/kossarsherzad/"
-            target="_blank"
-            class="contact-item">
+            <div class="contact-decoration">
 
-            ئینستاگرام
+                ❖ ✦ ❖
 
-        </a>
+            </div>
 
 
-        <a
-            href="https://www.linkedin.com/in/kossar-sherzad-332702416/"
-            target="_blank"
-            class="contact-item">
+            <h2>
 
-            لینکید ئین
+                پەیوەندیم پێوە بکە
 
-        </a>
+            </h2>
 
-    </div>
 
-    <div class="contact-decoration">
-        ❖ ✦ ❖
-    </div>
+            <p>
 
-    <p class="copyright">
-        دروستکردنی کۆسار شێرزاد
-    </p>
+                ئەگەر پێویستت بە دروستکردنی ئەپلیکەیشنی
 
-</div>
+                ئەندرۆید، وێبسایت یان سیستەمێکی تایبەت هەیە،
 
-        
+                پەیوەندیم پێوە بکە.
+
+            </p>
+
+
+            <div class="contact-info">
+
+
+                <a
+                    href="tel:+9647503037379"
+                    class="contact-item">
+
+                    ☏
+
+                    <span dir="ltr">
+
+                        750 303 7379
+
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="https://www.facebook.com/kossarsherzad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    فەیسبووك
+
+                </a>
+
+
+
+                <a
+                    href="https://www.instagram.com/kossarsherzad/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    ئینستاگرام
+
+                </a>
+
+
+
+                <a
+                    href="https://www.linkedin.com/in/kossar-sherzad-332702416/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    لینکید ئین
+
+                </a>
+
+
+            </div>
+
+
+            <div class="contact-decoration">
+
+                ❖ ✦ ❖
+
+            </div>
+
+
+            <p class="copyright">
+
+                دروستکردنی کۆسار شێرزاد
+
+            </p>
+
+
+        </div>
+
 
     </main>
 
 </div>
 
 
+
+<!-- =========================================================
+     WHAT'S NEW UPDATE DIALOG
+     ========================================================= -->
+
+<div
+    id="update-overlay"
+    class="update-overlay"
+    aria-hidden="true">
+
+
+    <div
+        class="update-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="update-title">
+
+
+        <!-- CLOSE -->
+
+        <button
+            id="update-close"
+            class="update-close"
+            type="button"
+            aria-label="داخستن">
+
+            ×
+
+        </button>
+
+
+
+        <!-- TOP DECORATION -->
+
+        <div class="update-decoration">
+
+            ❖ ✦ ❖
+
+        </div>
+
+
+
+        <!-- ICON -->
+
+        <div class="update-icon">
+
+            ✨
+
+        </div>
+
+
+
+        <!-- TITLE -->
+
+        <h2 id="update-title">
+
+            نوێ چی هەیە؟
+
+        </h2>
+
+
+
+        <!-- VERSION -->
+
+        <div class="update-version">
+
+            وەشانی نوێ
+
+        </div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <p class="update-description">
+
+            بەخێربێیت بۆ نوێکارییەکانی سیستەم.
+            ئەمانە هەندێک لە گۆڕانکاری و تایبەتمەندییە نوێکانن.
+
+        </p>
+
+
+
+        <!-- UPDATE LIST -->
+
+        <div class="update-list">
+
+
+            <div class="update-item">
+
+                <span class="update-item-icon">
+
+                    ✦
+
+                </span>
+
+                <span>
+
+                    تێبینی و فیدباکەکانی خوێندکاران زیادکرا.
+
+                </span>
+
+            </div>
+
+
+
+            <div class="update-item">
+
+                <span class="update-item-icon">
+
+                    ✦
+
+                </span>
+
+                <span>
+
+                    خشتەی قوتابیان بۆ بەڕێوەبردنی قوتابیان زیادکرا.
+
+                </span>
+
+            </div>
+
+
+
+            <div class="update-item">
+
+                <span class="update-item-icon">
+
+                    ✦
+
+                </span>
+
+                <span>
+
+                    دیزاین و ئەزموونی بەکارهێنانی داشبۆرد باشتر کرا.
+
+                </span>
+
+            </div>
+
+
+
+            <div class="update-item">
+
+                <span class="update-item-icon">
+
+                    ✦
+
+                </span>
+
+                <span>
+
+                    هەندێک کێشەی بچووک چاککراونەوە.
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- OK -->
+
+        <button
+            id="update-ok-button"
+            class="update-ok-button"
+            type="button">
+
+            باشە، تێگەیشتم
+
+        </button>
+
+
+
+        <!-- BOTTOM DECORATION -->
+
+        <div class="update-decoration bottom">
+
+            ❖ ✦ ❖
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
 <script type="module">
 
+
+    /* =========================================================
+       FIREBASE
+       ========================================================= */
+
     import {
+
         database,
+
         auth
+
     } from "./js/firebase.js";
 
+
     import {
+
         onAuthStateChanged,
+
         signOut
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
     import {
-        ref,
-        get,
-        remove
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+        ref,
+
+        get,
+
+        remove
+
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+    /* =========================================================
+       ELEMENTS
+       ========================================================= */
 
     const quizList =
-        document.getElementById("quiz-list");
+        document.getElementById(
+            "quiz-list"
+        );
+
 
     const totalQuizzes =
-        document.getElementById("total-quizzes");
+        document.getElementById(
+            "total-quizzes"
+        );
+
 
     const totalStudents =
-        document.getElementById("total-students");
+        document.getElementById(
+            "total-students"
+        );
 
 
-    // Check login
+
+    /* =========================================================
+       UPDATE DIALOG ELEMENTS
+       ========================================================= */
+
+    const updateOverlay =
+        document.getElementById(
+            "update-overlay"
+        );
+
+
+    const updateClose =
+        document.getElementById(
+            "update-close"
+        );
+
+
+    const updateOkButton =
+        document.getElementById(
+            "update-ok-button"
+        );
+
+
+
+
+    const UPDATE_ID =
+        "update-1";
+
+
+    const UPDATE_STORAGE_KEY =
+        "teacher_seen_update";
+
+
+
+    /* =========================================================
+       SHOW UPDATE DIALOG
+       ========================================================= */
+
+    function showUpdateDialog() {
+
+        updateOverlay.classList.add(
+            "show"
+        );
+
+        updateOverlay.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.style.overflow =
+            "hidden";
+
+    }
+
+
+
+    /* =========================================================
+       CLOSE UPDATE DIALOG
+       ========================================================= */
+
+    function closeUpdateDialog() {
+
+        updateOverlay.classList.remove(
+            "show"
+        );
+
+        updateOverlay.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.style.overflow =
+            "";
+
+        /*
+         * Save the current update ID.
+         *
+         * This means this exact update will
+         * not be shown again on this browser.
+         */
+
+        localStorage.setItem(
+            UPDATE_STORAGE_KEY,
+            UPDATE_ID
+        );
+
+    }
+
+
+
+    /* =========================================================
+       CHECK FOR NEW UPDATE
+       ========================================================= */
+
+    function checkForNewUpdate() {
+
+        const lastSeenUpdate =
+            localStorage.getItem(
+                UPDATE_STORAGE_KEY
+            );
+
+
+        /*
+         * If the teacher has not seen this
+         * update yet, show the dialog.
+         */
+
+        if (
+            lastSeenUpdate !== UPDATE_ID
+        ) {
+
+            /*
+             * Small delay makes the dialog
+             * appear smoothly after dashboard loads.
+             */
+
+            setTimeout(
+                function () {
+
+                    showUpdateDialog();
+
+                },
+                500
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       UPDATE DIALOG EVENTS
+       ========================================================= */
+
+    updateClose.addEventListener(
+        "click",
+        closeUpdateDialog
+    );
+
+
+    updateOkButton.addEventListener(
+        "click",
+        closeUpdateDialog
+    );
+
+
+    /*
+     * Allow ESC key to close the dialog.
+     */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                updateOverlay.classList.contains(
+                    "show"
+                )
+            ) {
+
+                closeUpdateDialog();
+
+            }
+
+        }
+    );
+
+
+
+    /* =========================================================
+       CHECK LOGIN
+       ========================================================= */
 
     onAuthStateChanged(
         auth,
@@ -280,15 +1430,28 @@
                     "login.html";
 
                 return;
+
             }
 
+
             loadQuizzes();
+
+
+            /*
+             * Check for a new update
+             * only after the teacher is logged in.
+             */
+
+            checkForNewUpdate();
 
         }
     );
 
 
-    // Load quizzes
+
+    /* =========================================================
+       LOAD QUIZZES
+       ========================================================= */
 
     async function loadQuizzes() {
 
@@ -300,16 +1463,25 @@
                     "quizzes"
                 );
 
+
             const snapshot =
-                await get(quizzesRef);
+                await get(
+                    quizzesRef
+                );
 
 
-            // No quizzes
 
-            if (!snapshot.exists()) {
+            /* =================================================
+               NO QUIZZES
+               ================================================= */
+
+            if (
+                !snapshot.exists()
+            ) {
 
                 totalQuizzes.textContent =
                     "٠";
+
 
                 totalStudents.textContent =
                     "٠";
@@ -320,12 +1492,18 @@
                     <div class="quiz-form">
 
                         <h2>
+
                             هیچ تاقیکردنەوەیەکت نییە
+
                         </h2>
 
+
                         <p class="subtitle">
+
                             یەکەم تاقیکردنەوەکەت دروست بکە.
+
                         </p>
+
 
                         <button
                             class="primary-btn create-btn"
@@ -343,11 +1521,18 @@
                 `;
 
                 return;
+
             }
 
 
+
+            /* =================================================
+               QUIZ DATA
+               ================================================= */
+
             const quizzes =
                 snapshot.val();
+
 
             const entries =
                 Object.entries(
@@ -361,10 +1546,14 @@
 
             let html = "";
 
+
             let totalStudentCount = 0;
 
 
-            // Load every quiz
+
+            /* =================================================
+               LOAD EVERY QUIZ
+               ================================================= */
 
             for (
                 const [quizId, quiz]
@@ -380,7 +1569,8 @@
                         await get(
                             ref(
                                 database,
-                                "results/" + quizId
+                                "results/" +
+                                quizId
                             )
                         );
 
@@ -410,6 +1600,11 @@
                     studentCount;
 
 
+
+                /* =================================================
+                   QUESTION COUNT
+                   ================================================= */
+
                 const questionCount =
                     quiz.questions
                         ? Object.keys(
@@ -417,6 +1612,11 @@
                         ).length
                         : 0;
 
+
+
+                /* =================================================
+                   CREATED DATE
+                   ================================================= */
 
                 const createdAt =
                     quiz.createdAt
@@ -428,52 +1628,86 @@
                         : "نەزانراو";
 
 
+
+                /* =================================================
+                   QUIZ CARD
+                   ================================================= */
+
                 html += `
 
                     <div
                         class="quiz-form"
-                        style="margin-bottom: 20px;"
+                        style="
+                            margin-bottom: 20px;
+                        "
                     >
 
+
                         <h2>
+
                             ${escapeHtml(
                                 quiz.title ||
                                 "بێ ناونیشان"
                             )}
+
                         </h2>
 
 
+
                         <p class="subtitle">
+
                             ${escapeHtml(
                                 quiz.description ||
                                 ""
                             )}
+
                         </p>
 
 
+
                         <p>
+
                             پرسیارەکان:
+
                             <strong>
+
                                 ${questionCount}
+
                             </strong>
+
                         </p>
 
 
+
                         <p>
+
                             خوێندکاران:
+
                             <strong>
+
                                 ${studentCount}
+
                             </strong>
+
                         </p>
+
 
 
                         <p>
+
                             دروستکراوە:
+
                             <strong>
+
                                 ${createdAt}
+
                             </strong>
+
                         </p>
 
+
+
+                        <!-- QUIZ BUTTONS -->
 
                         <div style="
                             display: flex;
@@ -483,7 +1717,7 @@
                         ">
 
 
-                            <!-- Open -->
+                            <!-- OPEN -->
 
                             <button
                                 class="primary-btn"
@@ -499,7 +1733,8 @@
                             </button>
 
 
-                            <!-- Copy Link -->
+
+                            <!-- COPY LINK -->
 
                             <button
                                 class="secondary-btn"
@@ -516,7 +1751,8 @@
                             </button>
 
 
-                            <!-- Edit -->
+
+                            <!-- EDIT -->
 
                             <button
                                 class="secondary-btn"
@@ -532,7 +1768,8 @@
                             </button>
 
 
-                            <!-- Results -->
+
+                            <!-- RESULTS -->
 
                             <button
                                 class="secondary-btn"
@@ -548,7 +1785,8 @@
                             </button>
 
 
-                            <!-- Delete -->
+
+                            <!-- DELETE -->
 
                             <button
                                 class="secondary-btn"
@@ -564,7 +1802,9 @@
 
                             </button>
 
+
                         </div>
+
 
                     </div>
 
@@ -572,6 +1812,11 @@
 
             }
 
+
+
+            /* =================================================
+               TOTAL STUDENTS
+               ================================================= */
 
             totalStudents.textContent =
                 totalStudentCount;
@@ -594,7 +1839,10 @@
                 <div class="quiz-form">
 
                     <p>
-                        هەڵەیەک ڕوویدا لە بارکردنی تاقیکردنەوەکان.
+
+                        هەڵەیەک ڕوویدا لە بارکردنی
+                        تاقیکردنەوەکان.
+
                     </p>
 
                 </div>
@@ -606,7 +1854,10 @@
     }
 
 
-    // Copy quiz link
+
+    /* =========================================================
+       COPY QUIZ LINK
+       ========================================================= */
 
     window.copyQuizLink =
         async function (
@@ -621,12 +1872,15 @@
 
             const link =
                 window.location.origin +
+
                 window.location.pathname
                     .replace(
                         "teacher.html",
                         "quiz.html"
                     ) +
+
                 "?id=" +
+
                 encodeURIComponent(
                     quizId
                 );
@@ -660,7 +1914,10 @@
         };
 
 
-    // Delete quiz
+
+    /* =========================================================
+       DELETE QUIZ
+       ========================================================= */
 
     window.deleteQuiz =
         async function (
@@ -688,25 +1945,38 @@
 
             try {
 
+
+                /* DELETE QUIZ */
+
                 await remove(
                     ref(
                         database,
-                        "quizzes/" + quizId
+                        "quizzes/" +
+                        quizId
                     )
                 );
 
-await remove(
-    ref(
-        database,
-        "answerKeys/" + quizId
-    )
-);
-                
+
+
+                /* DELETE ANSWER KEY */
 
                 await remove(
                     ref(
                         database,
-                        "results/" + quizId
+                        "answerKeys/" +
+                        quizId
+                    )
+                );
+
+
+
+                /* DELETE RESULTS */
+
+                await remove(
+                    ref(
+                        database,
+                        "results/" +
+                        quizId
                     )
                 );
 
@@ -736,10 +2006,15 @@ await remove(
         };
 
 
-    // Logout
+
+    /* =========================================================
+       LOGOUT
+       ========================================================= */
 
     document
-        .getElementById("logout-button")
+        .getElementById(
+            "logout-button"
+        )
         .addEventListener(
             "click",
             async function () {
@@ -773,27 +2048,35 @@ await remove(
         );
 
 
-    // Escape HTML
+
+    /* =========================================================
+       ESCAPE HTML
+       ========================================================= */
 
     function escapeHtml(value) {
 
         return String(value)
+
             .replace(
                 /&/g,
                 "&amp;"
             )
+
             .replace(
                 /</g,
                 "&lt;"
             )
+
             .replace(
                 />/g,
                 "&gt;"
             )
+
             .replace(
                 /"/g,
                 "&quot;"
             )
+
             .replace(
                 /'/g,
                 "&#039;"
@@ -801,9 +2084,10 @@ await remove(
 
     }
 
+
 </script>
+
 
 </body>
 
 </html>
-
