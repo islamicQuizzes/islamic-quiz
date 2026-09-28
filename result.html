@@ -3,15 +3,23 @@
 <html lang="ckb" dir="rtl">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ئەنجام - پرسیار لە ئێمە و وەڵام لە تۆ
-</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="css/style.css">
+    <title>
+        ئەنجام - پرسیار لە ئێمە و وەڵام لە تۆ
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css">
 
 </head>
+
 
 <body>
 
@@ -21,7 +29,6 @@
 
         <div class="logo">
             پرسیار لە ئێمە و وەڵام لە تۆ
-
         </div>
 
     </header>
@@ -35,9 +42,11 @@
                 ✓
             </div>
 
+
             <h1>
                 ئەنجامی تاقیکردنەوە
             </h1>
+
 
             <p id="student-name">
                 ناوی خوێندکار
@@ -50,9 +59,11 @@
                     نمرەکەت
                 </span>
 
+
                 <strong id="score">
                     0
                 </strong>
+
 
                 <small id="total">
                     لە 0
@@ -70,6 +81,64 @@
             </div>
 
 
+            <!-- STUDENT TABLE BUTTON -->
+
+            <a
+                href="student-table.html"
+                class="student-table-button">
+
+                بینینی خشتەی خوێندکاران
+
+            </a>
+
+
+            <!-- NOTE BUTTON -->
+
+            <button
+                id="note-button"
+                class="student-table-button">
+
+                📝 تێبینی
+
+            </button>
+
+
+            <!-- NOTE BOX -->
+
+            <div
+                id="note-box"
+                class="note-box"
+                style="display: none;">
+
+                <textarea
+                    id="student-note"
+                    placeholder="تێبینیت لەسەر ئەم تاقیکردنەوەیە بنووسە..."
+                    maxlength="1000"></textarea>
+
+
+                <div class="note-actions">
+
+                    <button
+                        id="save-note"
+                        class="primary-btn">
+
+                        پاشەکەوتکردنی تێبینی
+
+                    </button>
+
+
+                    <button
+                        id="cancel-note"
+                        class="secondary-btn">
+
+                        داخستن
+
+                    </button>
+
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -78,7 +147,22 @@
 </div>
 
 
-<script>
+<script type="module">
+
+    import {
+        database
+    } from "./js/firebase.js";
+
+
+    import {
+        ref,
+        update
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+    /* =====================================================
+       URL PARAMETERS
+       ===================================================== */
 
     const urlParams =
         new URLSearchParams(
@@ -86,15 +170,29 @@
         );
 
 
+    const quizId =
+        urlParams.get("id");
+
+
+    const resultId =
+        urlParams.get("resultId");
+
+
     const studentName =
         urlParams.get("name");
+
 
     const score =
         urlParams.get("score");
 
+
     const total =
         urlParams.get("total");
 
+
+    /* =====================================================
+       DISPLAY STUDENT NAME
+       ===================================================== */
 
     if (studentName) {
 
@@ -106,6 +204,10 @@
     }
 
 
+    /* =====================================================
+       DISPLAY SCORE
+       ===================================================== */
+
     if (score !== null) {
 
         document.getElementById(
@@ -115,6 +217,10 @@
 
     }
 
+
+    /* =====================================================
+       DISPLAY TOTAL
+       ===================================================== */
 
     if (total !== null) {
 
@@ -126,6 +232,10 @@
     }
 
 
+    /* =====================================================
+       RESULT MESSAGE
+       ===================================================== */
+
     if (
         score !== null &&
         total !== null &&
@@ -133,7 +243,10 @@
     ) {
 
         const percentage =
-            (Number(score) / Number(total)) * 100;
+            (
+                Number(score) /
+                Number(total)
+            ) * 100;
 
 
         const message =
@@ -142,17 +255,23 @@
             );
 
 
-        if (percentage >= 90) {
+        if (
+            percentage >= 90
+        ) {
 
             message.textContent =
-                "زۆر باشە!  ئەنجامێکی نایابە.";
+                "زۆر باشە! ئەنجامێکی نایابە.";
 
-        } else if (percentage >= 70) {
+        } else if (
+            percentage >= 70
+        ) {
 
             message.textContent =
-                "باشە!  بەردەوام بە.";
+                "باشە! بەردەوام بە.";
 
-        } else if (percentage >= 50) {
+        } else if (
+            percentage >= 50
+        ) {
 
             message.textContent =
                 "باشە، بەڵام هێشتا دەتوانیت باشتر بیت.";
@@ -160,11 +279,199 @@
         } else {
 
             message.textContent =
-                "هەوڵێکی باش بوو. دووبارە هەوڵ بدەرەوە! ";
+                "هەوڵێکی باش بوو. دووبارە هەوڵ بدەرەوە!";
 
         }
 
     }
+
+
+    /* =====================================================
+       NOTE ELEMENTS
+       ===================================================== */
+
+    const noteButton =
+        document.getElementById(
+            "note-button"
+        );
+
+
+    const noteBox =
+        document.getElementById(
+            "note-box"
+        );
+
+
+    const studentNote =
+        document.getElementById(
+            "student-note"
+        );
+
+
+    const saveNoteButton =
+        document.getElementById(
+            "save-note"
+        );
+
+
+    const cancelNoteButton =
+        document.getElementById(
+            "cancel-note"
+        );
+
+
+    /* =====================================================
+       OPEN NOTE BOX
+       ===================================================== */
+
+    noteButton.addEventListener(
+        "click",
+        function () {
+
+            noteBox.style.display =
+                "block";
+
+
+            noteButton.style.display =
+                "none";
+
+
+            studentNote.focus();
+
+        }
+    );
+
+
+    /* =====================================================
+       CANCEL NOTE
+       ===================================================== */
+
+    cancelNoteButton.addEventListener(
+        "click",
+        function () {
+
+            noteBox.style.display =
+                "none";
+
+
+            noteButton.style.display =
+                "inline-block";
+
+        }
+    );
+
+
+    /* =====================================================
+       SAVE NOTE TO FIREBASE
+       ===================================================== */
+
+    saveNoteButton.addEventListener(
+        "click",
+        async function () {
+
+            const note =
+                studentNote.value.trim();
+
+
+            if (
+                note === ""
+            ) {
+
+                alert(
+                    "تکایە تێبینییەکە بنووسە."
+                );
+
+                studentNote.focus();
+
+                return;
+
+            }
+
+
+            if (
+                !quizId ||
+                !resultId
+            ) {
+
+                alert(
+                    "نەتوانرا زانیاری ئەنجامەکە بدۆزرێتەوە."
+                );
+
+                return;
+
+            }
+
+
+            saveNoteButton.disabled =
+                true;
+
+
+            saveNoteButton.textContent =
+                "پاشەکەوت دەکرێت...";
+
+
+            try {
+
+                const resultRef =
+                    ref(
+                        database,
+                        "results/" +
+                        quizId +
+                        "/" +
+                        resultId
+                    );
+
+
+                await update(
+                    resultRef,
+                    {
+
+                        note:
+                            note,
+
+                        noteUpdatedAt:
+                            Date.now()
+
+                    }
+                );
+
+
+                saveNoteButton.textContent =
+                    "پاشەکەوت کرا ✓";
+
+
+                studentNote.disabled =
+                    true;
+
+
+                cancelNoteButton.style.display =
+                    "none";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Note save error:",
+                    error
+                );
+
+
+                alert(
+                    "کێشەیەک ڕوویدا لە پاشەکەوتکردنی تێبینییەکە."
+                );
+
+
+                saveNoteButton.disabled =
+                    false;
+
+
+                saveNoteButton.textContent =
+                    "پاشەکەوتکردنی تێبینی";
+
+            }
+
+        }
+    );
 
 </script>
 

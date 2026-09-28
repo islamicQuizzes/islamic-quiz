@@ -3545,16 +3545,24 @@
                    RESULT PAGE
                    ================================================= */
 
-                window.location.href =
-                    "result.html" +
-                    "?name=" +
-                    encodeURIComponent(
-                        studentName
-                    ) +
-                    "&score=" +
-                    score +
-                    "&total=" +
-                    total;
+               window.location.href =
+    "result.html" +
+    "?id=" +
+    encodeURIComponent(
+        quizId
+    ) +
+    "&resultId=" +
+    encodeURIComponent(
+        newResultRef.key
+    ) +
+    "&name=" +
+    encodeURIComponent(
+        studentName
+    ) +
+    "&score=" +
+    score +
+    "&total=" +
+    total;
 
             } catch (error) {
 
