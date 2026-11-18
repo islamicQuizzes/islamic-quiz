@@ -1336,13 +1336,54 @@
                     placeholder="ناوی خۆت بنووسە"
                     autocomplete="name">
 
+                    <div class="honesty-agreement" style="
+    margin-top: 20px;
+    padding: 18px;
+    background: #f9edcb;
+    border: 1px solid #b29253;
+    border-radius: 12px;
+    text-align: right;
+    line-height: 2;
+">
+
+    <h3>بەڵێنی خوێندکار</h3>
+
+    <p>
+        بەڵێن دەدەم کە ئەم تاقیکردنەوەیە بە ڕاستگۆیی
+        ئەنجام بدەم و هیچ جۆرە فێڵ و هاوکارییەکی
+        نایاسایی بەکارناهێنم.
+    </p>
+
+    <label style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    ">
+
+        <input
+            type="checkbox"
+            id="honesty-checkbox"
+            style="width: 20px; height: 20px;">
+
+        <span>
+            خوێندوومەتەوە و بەڵێن دەدەم پابەند بم.
+        </span>
+
+    </label>
+
+</div>
+
+                    
+
                 <button
-                    id="start-quiz"
-                    class="primary-btn">
+    id="start-quiz"
+    class="primary-btn"
+    disabled>
 
-                    دەستپێکردنی تاقیکردنەوە
+    دەستپێکردنی تاقیکردنەوە
 
-                </button>
+</button>
 
             </section>
 
@@ -1437,10 +1478,37 @@
 
                 <!-- All questions -->
 
-                <div
-                    id="all-questions-container"
-                    style="display: none;">
-                </div>
+                <!-- Total timer for all questions mode -->
+
+<div
+    id="total-quiz-timer"
+    style="
+        display: none;
+        text-align: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f5ead2;
+        border: 2px solid #c5a45b;
+        border-radius: 12px;
+        font-size: 22px;
+        font-weight: bold;
+    ">
+
+    کاتی ماوە:
+
+    <span id="total-timer-display">
+        90:00
+    </span>
+
+</div>
+
+
+<!-- All questions -->
+
+<div
+    id="all-questions-container"
+    style="display: none;">
+</div>
 
 
                 <!-- One-by-one question -->
@@ -1579,6 +1647,25 @@
         const startQuizButton =
             document.getElementById("start-quiz");
 
+            const honestyCheckbox =
+    document.getElementById("honesty-checkbox");
+
+
+// Keep start button disabled until agreement is checked
+
+startQuizButton.disabled = true;
+
+
+honestyCheckbox.addEventListener(
+    "change",
+    function () {
+
+        startQuizButton.disabled =
+            !honestyCheckbox.checked;
+
+    }
+);
+
 
         const questionArea =
             document.getElementById("question-area");
@@ -1624,6 +1711,16 @@
             document.getElementById(
                 "all-questions-container"
             );
+
+            const totalQuizTimer =
+    document.getElementById(
+        "total-quiz-timer"
+    );
+
+const totalTimerDisplay =
+    document.getElementById(
+        "total-timer-display"
+    );
 
 
         const oneByOneTimer =
@@ -1691,6 +1788,12 @@
         let allQuestionRemainingTimes = [];
 
         let allQuestionLocked = [];
+
+        let totalQuizTimeLeft = 90 * 60;
+
+        let totalQuizWarningShown = false;
+
+let totalQuizInterval = null;
 
 
         /* =====================================================
@@ -1934,6 +2037,43 @@
         startQuizButton.addEventListener(
             "click",
             function () {
+
+                const now = Date.now();
+
+if (
+    quiz.quizStartTime &&
+    now < quiz.quizStartTime
+) {
+    const startDate = new Date(
+        quiz.quizStartTime
+    ).toLocaleString("ku-IQ");
+
+    alert(
+        "ئەم تاقیکردنەوەیە هێشتا دەستی پێنەکردووە.\nکاتی دەستپێکردن: " +
+        startDate
+    );
+
+    return;
+}
+
+if (
+    quiz.quizEndTime &&
+    now >= quiz.quizEndTime
+) {
+    alert(
+        "ببورە، کاتی ئەم تاقیکردنەوەیە تەواو بووە."
+    );
+
+    return;
+}
+
+                if (!honestyCheckbox.checked) {
+
+    alert("تکایە سەرەتا بەڵێنەکە پەسەند بکە.");
+
+    return;
+
+}
 
                 const name =
                     studentNameInput
@@ -2436,6 +2576,13 @@
             allSubmitContainer.style.display =
                 "block";
 
+                totalQuizTimer.style.display =
+    "block";
+
+totalQuizTimeLeft = 90 * 60;
+
+startTotalQuizTimer();
+
 
             const totalQuestions =
                 quiz.questions.length;
@@ -2490,6 +2637,84 @@
             renderAllQuestions();
 
         }
+
+        /* =====================================================
+   TOTAL QUIZ TIMER - 90 MINUTES
+   ===================================================== */
+
+function startTotalQuizTimer() {
+
+    clearInterval(totalQuizInterval);
+
+    totalQuizWarningShown = false;
+
+    function updateTotalTimer() {
+
+        const minutes = Math.floor(
+            totalQuizTimeLeft / 60
+        );
+
+        const seconds =
+            totalQuizTimeLeft % 60;
+
+        totalTimerDisplay.textContent =
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0");
+
+        if (totalQuizTimeLeft <= 0) {
+
+            clearInterval(totalQuizInterval);
+
+            alert(
+                "کاتی تاقیکردنەوە تەواو بوو. وەڵامەکانت خۆکارانە نێردران."
+            );
+
+            for (
+                let i = 0;
+                i < quiz.questions.length;
+                i++
+            ) {
+
+                const answer = getSavedAnswer(i);
+
+                if (!answer) {
+                    saveAnswer(i, "");
+                }
+
+            }
+
+            submitQuiz();
+
+            return;
+        }
+
+        if (
+    totalQuizTimeLeft <= 600 &&
+    totalQuizTimeLeft > 0 &&
+    !totalQuizWarningShown
+) {
+
+    totalQuizWarningShown = true;
+
+    alert(
+        "ئاگاداربە! تەنها ١٠ خولەکت ماوە بۆ تەواوکردنی تاقیکردنەوەکە."
+    );
+
+}
+
+        totalQuizTimeLeft--;
+
+    }
+
+    updateTotalTimer();
+
+    totalQuizInterval = setInterval(
+        updateTotalTimer,
+        1000
+    );
+
+}
 
 
         /* =====================================================
@@ -2571,7 +2796,7 @@
                                 id="all-timer-${index}">
 
                                 <span>
-                                    بەبێ کات
+                                   کات 90 خولەك
                                 </span>
 
                             
@@ -3371,6 +3596,14 @@
             submitting =
                 true;
 
+                if (totalQuizInterval) {
+
+    clearInterval(totalQuizInterval);
+
+    totalQuizInterval = null;
+
+}
+
 
             submitButton.disabled =
                 true;
@@ -3545,7 +3778,7 @@
                    RESULT PAGE
                    ================================================= */
 
-               window.location.href =
+              window.location.href =
     "result.html" +
     "?id=" +
     encodeURIComponent(
@@ -3558,11 +3791,7 @@
     "&name=" +
     encodeURIComponent(
         studentName
-    ) +
-    "&score=" +
-    score +
-    "&total=" +
-    total;
+    );
 
             } catch (error) {
 
