@@ -1336,43 +1336,123 @@
                     placeholder="ناوی خۆت بنووسە"
                     autocomplete="name">
 
-                    <div class="honesty-agreement" style="
+        
+
+<div class="honesty-agreement" style="
     margin-top: 20px;
-    padding: 18px;
+    padding: 25px 20px;
     background: #f9edcb;
     border: 1px solid #b29253;
     border-radius: 12px;
-    text-align: right;
+    text-align: center;
     line-height: 2;
 ">
 
-    <h3>بەڵێنی خوێندکار</h3>
+    <h3 style="
+        color: #294c3a;
+        margin-bottom: 15px;
+        font-size: 22px;
+        text-align: center;
+    ">
+        سوێندی ڕاستگۆیی و پابەندبوون
+    </h3>
 
-    <p>
-        بەڵێن دەدەم کە ئەم تاقیکردنەوەیە بە ڕاستگۆیی
-        ئەنجام بدەم و هیچ جۆرە فێڵ و هاوکارییەکی
-        نایاسایی بەکارناهێنم.
+    <p style="
+        margin-bottom: 15px;
+        font-weight: bold;
+        text-align: center;
+    ">
+        بە ناوی خوای گەورە و میهرەبان
     </p>
+
+    <p style="
+        margin-bottom: 15px;
+        text-align: center;
+    ">
+        من بە ناوی خوای گەورە و بە پیرۆزیی قورئانی پیرۆز سوێند دەخۆم کە لە ماوەی ئەنجامدانی ئەم تاقیکردنەوەیەدا ڕاستگۆ و دڵسۆز بم. هیچ جۆرە فێڵ و ساختەکارییەک ناکەم، لە کەسی تر یارمەتی وەڵام وەرناگرم، و بە هیچ شێوەیەک هەوڵی تێپەڕاندنی یاسا و ڕێنماییەکانی تاقیکردنەوە نادەم.
+    </p>
+
+    <p style="
+        margin-bottom: 18px;
+        text-align: center;
+    ">
+        هەروەها پابەند دەبم کە تا کاتی تەواوکردنی تاقیکردنەوەکە، بەبێ مۆڵەت هیچ کارێکی دەرەکی ناکەم و هەموو وەڵامەکانم بە زانیاری و توانای خۆم دەدەمەوە.
+    </p>
+
+    <p style="
+        margin-bottom: 22px;
+        color: #674832;
+        text-align: center;
+        font-weight: bold;
+    ">
+        داوا لە خوای گەورە دەکەم یارمەتیدەرم بێت لە ڕاستگۆیی و سەرکەوتندا.
+    </p>
+
+    <!-- Countdown above checkbox -->
+
+    <p
+        id="honesty-countdown"
+        style="
+            color: #9b762f;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 18px;
+        ">
+        تکایە ١٠ چرکە چاوەڕێ بکە... ١٠
+    </p>
+
+    <!-- Checkbox -->
 
     <label style="
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 10px;
+        justify-content: center;
+        gap: 12px;
         cursor: pointer;
+        padding: 18px 12px;
+        background: rgba(255,255,255,0.55);
+        border: 1px solid #b29253;
+        border-radius: 10px;
+        text-align: center;
     ">
 
         <input
             type="checkbox"
             id="honesty-checkbox"
-            style="width: 20px; height: 20px;">
+            disabled
+            style="
+                width: 32px;
+                height: 32px;
+                cursor: pointer;
+                accent-color: #294c3a;
+            ">
 
-        <span>
-            خوێندوومەتەوە و بەڵێن دەدەم پابەند بم.
+        <span style="
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        ">
+            سوێند دەخۆم و پشتڕاستی دەکەمەوە کە دەقەکەی سەرەوەم بە تەواوی خوێندووەتەوە، تێگەیشتووم و پابەند دەبم بە هەموو خاڵەکانی.
         </span>
 
     </label>
 
+    <!-- Instruction below checkbox -->
+
+    <p style="
+        color: #806b4b;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 15px;
+    ">
+        تکایە چاوەڕێ بکە تا کاتەکە تەواو دەبێت، پاشان خانەی پشتڕاستکردنەوە نیشانە بکە.
+    </p>
+
 </div>
+
 
                     
 
@@ -1650,6 +1730,43 @@
             const honestyCheckbox =
     document.getElementById("honesty-checkbox");
 
+    const honestyCountdown =
+    document.getElementById("honesty-countdown");
+
+
+let remainingSeconds = 10;
+
+const kurdishNumbers = [
+    "٠", "١", "٢", "٣", "٤",
+    "٥", "٦", "٧", "٨", "٩", "١٠"
+];
+
+const countdownTimer = setInterval(function () {
+
+    remainingSeconds--;
+
+    if (remainingSeconds > 0) {
+
+        honestyCountdown.textContent =
+            "تکایە چاوەڕێ بکە... " +
+            kurdishNumbers[remainingSeconds];
+
+    } else {
+
+        clearInterval(countdownTimer);
+
+        honestyCheckbox.disabled = false;
+
+        honestyCountdown.textContent =
+            "ئێستا دەتوانیت سوێندەکە پشتڕاست بکەیتەوە.";
+
+        honestyCountdown.style.color = "green";
+
+    }
+
+}, 1000);
+
+
 
 // Keep start button disabled until agreement is checked
 
@@ -1659,10 +1776,8 @@ startQuizButton.disabled = true;
 honestyCheckbox.addEventListener(
     "change",
     function () {
-
         startQuizButton.disabled =
             !honestyCheckbox.checked;
-
     }
 );
 
