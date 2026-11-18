@@ -146,6 +146,26 @@
 
                     </select>
 
+                    <!-- Quiz Availability -->
+
+<label for="quiz-start-time">
+    کاتی دەستپێکردنی تاقیکردنەوە
+</label>
+
+<input
+    type="datetime-local"
+    id="quiz-start-time"
+>
+
+<label for="quiz-end-time">
+    کاتی کۆتایی تاقیکردنەوە
+</label>
+
+<input
+    type="datetime-local"
+    id="quiz-end-time"
+>
+
                 </div>
 
 
@@ -453,6 +473,34 @@
                                 .value
                         );
 
+                        const quizStartTime =
+    document.getElementById(
+        "quiz-start-time"
+    ).value;
+
+const quizEndTime =
+    document.getElementById(
+        "quiz-end-time"
+    ).value;
+
+if (
+    (quizStartTime && !quizEndTime) ||
+    (!quizStartTime && quizEndTime)
+) {
+    alert("تکایە هەردوو کاتی دەستپێک و کۆتایی دیاری بکە.");
+    return;
+}
+
+if (quizStartTime && quizEndTime) {
+    const start = new Date(quizStartTime).getTime();
+    const end = new Date(quizEndTime).getTime();
+
+    if (end <= start) {
+        alert("کاتی کۆتایی دەبێت دوای کاتی دەستپێک بێت.");
+        return;
+    }
+}
+
 
                     const questions = [];
 
@@ -614,10 +662,20 @@
                                     questionDisplayMode,
 
                                 timerPerQuestion:
-                                    timerPerQuestion,
+    timerPerQuestion,
 
-                                createdAt:
-                                    Date.now()
+quizStartTime:
+    quizStartTime
+        ? new Date(quizStartTime).getTime()
+        : null,
+
+quizEndTime:
+    quizEndTime
+        ? new Date(quizEndTime).getTime()
+        : null,
+
+createdAt:
+    Date.now()
 
                             }
                         );
