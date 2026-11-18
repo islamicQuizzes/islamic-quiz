@@ -53,23 +53,15 @@
             </p>
 
 
-            <div class="score-box">
+            <div class="score-box" style="display: none;">
 
-                <span>
-                    نمرەکەت
-                </span>
+    <span>نمرەکەت</span>
 
+    <strong id="score">0</strong>
 
-                <strong id="score">
-                    0
-                </strong>
+    <small id="total">لە 0</small>
 
-
-                <small id="total">
-                    لە 0
-                </small>
-
-            </div>
+</div>
 
 
             <div
@@ -79,6 +71,48 @@
                 تاقیکردنەوەکەت بە سەرکەوتوویی تەواو کرد!
 
             </div>
+
+
+            <!-- TELEGRAM ANNOUNCEMENT -->
+
+<div class="telegram-notice">
+
+    <div class="telegram-notice-icon">
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="36"
+        height="36"
+        viewBox="0 0 24 24"
+        fill="#229ED9"
+        aria-label="Telegram">
+
+        <path d="M22 2L2 9.5l7.5 2.5L12 20l4-5 4.5 3L22 2zM9.5 12l9-6-7 8-.5 4-1.5-6z"/>
+    </svg>
+</div>
+
+    <h3>
+        ئاگاداریی ئەنجامەکان
+    </h3>
+
+    <p>
+        سوپاس بۆ بەشداریکردنت لە تاقیکردنەوەکە.
+        ئەنجامەکانت لە گرووپی فەرمیی تێلەگرامماندا
+        ڕادەگەیەنرێن. تکایە بۆ ئاگاداربوون لە
+        ئەنجامەکان، بەشداریی گرووپەکە بکە.
+        سوپاس بۆ متمانەت.
+    </p>
+
+    <a
+        href="https://t.me/xoshawestman"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="telegram-join-button">
+
+        بەشداری لە گرووپی تێلەگرام
+
+    </a>
+
+</div>
 
 
             <!-- STUDENT TABLE BUTTON -->
@@ -98,7 +132,7 @@
                 id="note-button"
                 class="student-table-button">
 
-                📝 تێبینی
+             تێبینیەك بنووسە
 
             </button>
 
@@ -182,12 +216,7 @@
         urlParams.get("name");
 
 
-    const score =
-        urlParams.get("score");
 
-
-    const total =
-        urlParams.get("total");
 
 
     /* =====================================================
