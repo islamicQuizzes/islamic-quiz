@@ -1810,3 +1810,49 @@ footer {
 .quiz-title-header #quiz-description {
     margin: 8px auto 0;
 }
+
+/* TELEGRAM ANNOUNCEMENT */
+
+.telegram-notice {
+    margin: 25px 0;
+    padding: 22px;
+    background: #f5f0e5;
+    border: 1px solid #d8c49a;
+    border-radius: 16px;
+    text-align: center;
+    direction: rtl;
+}
+
+.telegram-notice-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.telegram-notice h3 {
+    color: #75552d;
+    margin-bottom: 12px;
+    font-size: 19px;
+}
+
+.telegram-notice p {
+    color: #665744;
+    font-size: 15px;
+    line-height: 2;
+    margin-bottom: 18px;
+}
+
+.telegram-join-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #229ED9;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.telegram-join-button:hover {
+    background: #168ac0;
+    transform: translateY(-2px);
+}
