@@ -156,6 +156,29 @@
 
                         </select>
 
+                                                <!-- Quiz opening time -->
+
+                        <label for="quiz-start-time">
+                            کاتی دەستپێکردنی تاقیکردنەوە
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="quiz-start-time"
+                        >
+
+
+                        <!-- Quiz closing time -->
+
+                        <label for="quiz-end-time">
+                            کاتی کۆتایی تاقیکردنەوە
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="quiz-end-time"
+                        >
+
                     </div>
 
 
@@ -391,6 +414,22 @@
                     )
                     .value =
                     quiz.timerPerQuestion || 15;
+
+                    document.getElementById("quiz-start-time").value =
+    quiz.quizStartTime
+        ? new Date(
+            quiz.quizStartTime -
+            new Date(quiz.quizStartTime).getTimezoneOffset() * 60000
+        ).toISOString().slice(0, 16)
+        : "";
+
+document.getElementById("quiz-end-time").value =
+    quiz.quizEndTime
+        ? new Date(
+            quiz.quizEndTime -
+            new Date(quiz.quizEndTime).getTimezoneOffset() * 60000
+        ).toISOString().slice(0, 16)
+        : "";
 
 
                 // Clear questions
@@ -724,6 +763,27 @@
                                 .value
                         );
 
+                        const startTimeValue = document.getElementById("quiz-start-time").value;
+const endTimeValue = document.getElementById("quiz-end-time").value;
+
+if ((startTimeValue && !endTimeValue) || (!startTimeValue && endTimeValue)) {
+    alert("تکایە هەردوو کاتی دەستپێک و کۆتایی دیاری بکە، یان هەردووکیان بەتاڵ بهێڵەوە.");
+    return;
+}
+
+const quizStartTime = startTimeValue
+    ? new Date(startTimeValue).getTime()
+    : null;
+
+const quizEndTime = endTimeValue
+    ? new Date(endTimeValue).getTime()
+    : null;
+
+if (quizStartTime && quizEndTime && quizEndTime <= quizStartTime) {
+    alert("کاتی کۆتایی دەبێت دوای کاتی دەستپێکردن بێت.");
+    return;
+}
+
 
                     const questionCards =
                         document.querySelectorAll(
@@ -864,37 +924,17 @@
                             );
 
 
-                        await update(
-                            quizRef,
-                            {
-
-                                title:
-                                    title,
-
-                                description:
-                                    description,
-
-                                questions:
-                                    questions,
-
-                                /*
-                                 * Save quiz settings
-                                 */
-
-                                pointsPerQuestion:
-                                    pointsPerQuestion,
-
-                                questionDisplayMode:
-                                    questionDisplayMode,
-
-                                timerPerQuestion:
-                                    timerPerQuestion,
-
-                                updatedAt:
-                                    Date.now()
-
-                            }
-                        );
+                        await update(quizRef, {
+    title,
+    description,
+    questions,
+    pointsPerQuestion,
+    questionDisplayMode,
+    timerPerQuestion,
+    quizStartTime,
+    quizEndTime,
+    updatedAt: Date.now()
+});
 
 
                         // Update answer keys
