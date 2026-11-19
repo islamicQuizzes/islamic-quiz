@@ -2060,6 +2060,54 @@ let totalQuizInterval = null;
 
                 }
 
+                
+/* =================================================
+   RANDOM QUESTION ORDER
+   ================================================= */
+
+// Keep every question connected to its own answer key
+const questionPairs = quiz.questions.map(
+    function (question, index) {
+        return {
+            question: question,
+            answerKey: answerKeys[index]
+        };
+    }
+);
+
+// Shuffle questions using Fisher-Yates
+for (
+    let i = questionPairs.length - 1;
+    i > 0;
+    i--
+) {
+    const randomIndex = Math.floor(
+        Math.random() * (i + 1)
+    );
+
+    [
+        questionPairs[i],
+        questionPairs[randomIndex]
+    ] = [
+        questionPairs[randomIndex],
+        questionPairs[i]
+    ];
+}
+
+// Apply the same random order to questions and answer keys
+quiz.questions = questionPairs.map(
+    function (pair) {
+        return pair.question;
+    }
+);
+
+answerKeys = questionPairs.map(
+    function (pair) {
+        return pair.answerKey;
+    }
+);
+
+
 
                 /* =================================================
                    DISPLAY QUIZ
