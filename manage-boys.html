@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="ckb" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>بەڕێوەبردنی خشتەی کوڕان</title><link rel="stylesheet" href="css/style.css">
+<style>
+.group-card{max-width:760px;margin:22px auto;padding:24px;border-radius:18px;background:rgba(255,255,255,.7);border:1px solid #ddd}
+.student-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:13px;margin:10px 0;border:1px solid #ddd;border-radius:12px}
+.student-actions{display:flex;gap:8px}.student-actions button{margin:0}
+.nav-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:25px}
+.nav-card{display:block;text-align:center;padding:28px 18px;border:1px solid #ddd;border-radius:18px;text-decoration:none;background:rgba(255,255,255,.65)}
+.nav-card h2{margin:0 0 10px}.nav-card p{margin:0}
+@media(max-width:600px){.student-row{align-items:flex-start;flex-direction:column}}
+</style></head><body><div class="quiz-container"><header class="quiz-header"><div class="logo">خشتەی کوڕان</div><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><a href="students.html">گەڕانەوە</a><a href="teacher.html">داشبۆرد</a><a href="boys-results.html" target="_blank">بینینی خشتە</a><button id="logout-button" class="secondary-btn" type="button">چوونەدەرەوە</button></div></header><main class="create-content"><section class="quiz-form group-card"><h1>خشتەی کوڕان</h1><p class="subtitle">ئەم بەشە تەنها بۆ بەڕێوەبردنی خوێندکارانی کوڕیە.</p><label for="student-name">ناوی خوێندکار</label><input id="student-name" type="text" placeholder="ناوی خوێندکار"><label for="student-point">خاڵ</label><input id="student-point" type="number" min="0" step="any" placeholder="خاڵ"><button id="add-button" class="primary-btn create-btn" type="button">زیادکردنی خوێندکاری کوڕ</button><hr><h2>خوێندکارانی کوڕان</h2><div id="students-list">چاوەڕێ بکە...</div></section></main></div>
+<script type="module">
+import {database,auth} from "./js/firebase.js";
+import {onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {ref,get,push,set,remove} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const path="MaleStudentPoints"; const list=document.getElementById('students-list');
+onAuthStateChanged(auth,user=>{if(!user){location.href='login.html';return;}load();});
+document.getElementById('add-button').addEventListener('click',async()=>{const name=document.getElementById('student-name').value.trim();const point=document.getElementById('student-point').value.trim();if(!name)return alert('تکایە ناوی خوێندکار بنووسە.');if(point===''||!Number.isFinite(Number(point))||Number(point)<0)return alert('تکایە خاڵێکی دروست بنووسە.');try{await set(push(ref(database,path)),{name,point:Number(point)});document.getElementById('student-name').value='';document.getElementById('student-point').value='';await load();}catch(e){console.error(e);alert('هەڵەیەک ڕوویدا.');}});
+async function load(){try{const snap=await get(ref(database,path));if(!snap.exists()){list.innerHTML='<p>هێشتا هیچ خوێندکارێک زیاد نەکراوە.</p>';return;}const rows=Object.entries(snap.val()).sort((a,b)=>Number(b[1].point||0)-Number(a[1].point||0));list.innerHTML=rows.map(([key,s])=>`<div class="student-row"><div><strong>${esc(s.name||'')}</strong><div>${esc(String(s.point??0))} خاڵ</div></div><div class="student-actions"><button class="primary-btn" data-act="edit" data-key="${key}">دەستکاری</button><button class="secondary-btn" data-act="del" data-key="${key}">سڕینەوە</button></div></div>`).join('');list.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>b.dataset.act==='edit'?edit(b.dataset.key):del(b.dataset.key)));}catch(e){console.error(e);list.innerHTML='<p>هەڵە لە بارکردنی داتا.</p>';}}
+async function edit(key){const r=ref(database,path+'/'+key);const s=(await get(r)).val();if(!s)return;const name=prompt('ناوی خوێندکار:',s.name||'');if(name===null)return;if(!name.trim())return alert('ناو نابێت بەتاڵ بێت.');const point=prompt('خاڵ:',String(s.point??0));if(point===null)return;if(point.trim()===''||!Number.isFinite(Number(point))||Number(point)<0)return alert('خاڵی دروست بنووسە.');await set(r,{name:name.trim(),point:Number(point)});load();}
+async function del(key){if(!confirm('دڵنیایت لە سڕینەوە؟'))return;await remove(ref(database,path+'/'+key));load();}
+document.getElementById('logout-button').addEventListener('click',async()=>{await signOut(auth);location.href='login.html';});
+function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+</script></body></html>
