@@ -1,40 +1,157 @@
-<!DOCTYPE html><html lang="ckb" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>بەڕێوەبردنی خشتەی ئافرەتان</title><link rel="stylesheet" href="css/style.css">
-<style>
-.group-card{max-width:760px;margin:22px auto;padding:24px;border-radius:18px;background:rgba(255,255,255,.7);border:1px solid #ddd}
-.student-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:13px;margin:10px 0;border:1px solid #ddd;border-radius:12px}
-.student-actions{display:flex;gap:8px}.student-actions button{margin:0}
-.nav-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:25px}
-.nav-card{display:block;text-align:center;padding:28px 18px;border:1px solid #ddd;border-radius:18px;text-decoration:none;background:rgba(255,255,255,.65)}
-.nav-card h2{margin:0 0 10px}.nav-card p{margin:0}
-@media(max-width:600px){.student-row{align-items:flex-start;flex-direction:column}}
+<!DOCTYPE html><html lang="ckb" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ئەنجامی کچان</title><link rel="stylesheet" href="css/style.css"><style>
+.results-wrap{max-width:850px;margin:24px auto}.results-title{text-align:center;margin-bottom:8px}.top-note{text-align:center;margin:0 0 20px;color:#76520b;font-weight:bold}
+.result-row{display:flex;align-items:center;gap:12px;padding:13px 16px;min-height:58px;border-bottom:1px solid #e3e3e3;background:rgba(255,255,255,.7)}
+.rank{width:36px;flex-shrink:0;text-align:center;font-weight:900;font-size:17px}.student-name{flex:1;font-weight:700;overflow-wrap:anywhere}.points{font-weight:800;white-space:nowrap}
+.result-row.top{background:linear-gradient(90deg,#fff8dc,#fff1b8);border-right:5px solid #d5a322}
+.result-row.rank-1{background:linear-gradient(90deg,#fff5cc,#ffe28a);border-right-color:#d4a017}
+.result-row.rank-2{background:linear-gradient(90deg,#f5f5f5,#e7e7e7);border-right-color:#9a9a9a}
+.result-row.rank-3{background:linear-gradient(90deg,#ffeadc,#f6d0b4);border-right-color:#b87333}
+.medal{font-size:19px;margin-left:5px}.top-label{font-size:11px;font-weight:800;color:#805900;background:#ffdf75;padding:3px 7px;border-radius:20px;margin-right:8px}
+.empty{padding:22px;text-align:center}@media(max-width:480px){.result-row{padding:10px;gap:7px}.top-label{display:none}}
 
-/* Matching rose theme for the girls' management page */
+/* Contact footer copied to match the teacher dashboard */
+.contact-footer{margin:36px auto 20px;padding:28px 20px;max-width:850px;text-align:center;border-radius:18px;background:linear-gradient(135deg,#172554,#1e3a8a);color:#fff;box-shadow:0 10px 28px rgba(15,23,42,.16)}
+.contact-footer h2{margin:10px 0 12px;font-size:23px;color:#fff}
+.contact-footer p{line-height:1.9;margin:10px auto;max-width:620px;color:rgba(255,255,255,.9)}
+.contact-decoration{color:#f4cf68;letter-spacing:8px;font-size:18px;margin:8px 0}
+.contact-info{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px;margin:22px 0}
+.contact-item{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid rgba(255,255,255,.3);border-radius:12px;color:#fff;text-decoration:none;font-weight:700;background:rgba(255,255,255,.09);transition:background .2s ease,transform .2s ease}
+.contact-item:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+.contact-footer .copyright{font-size:13px;color:rgba(255,255,255,.75);margin-top:14px}
+
+
+/* Girls' results theme: soft rose, blush and elegant floral details */
 body.girls-page{background:radial-gradient(circle at 8% 8%,rgba(255,190,213,.38),transparent 28%),radial-gradient(circle at 92% 24%,rgba(244,183,211,.32),transparent 25%),linear-gradient(145deg,#fff7fb 0%,#fff0f6 48%,#fff8fc 100%)}
-.girls-page .quiz-header{background:linear-gradient(115deg,#9d174d,#db4f86 58%,#f08ab2);color:#fff;border-radius:0 0 22px 22px;box-shadow:0 12px 30px rgba(190,24,93,.16)}
-.girls-page .quiz-header .logo,.girls-page .quiz-header a{color:#fff}
-.girls-page .group-card{background:rgba(255,255,255,.88);border:1px solid #f3bfd5;box-shadow:0 16px 38px rgba(190,24,93,.09);border-radius:24px}
-.girls-page .group-card h1,.girls-page .group-card h2{color:#9d174d}
-.girls-page .group-card h1:before{content:"✿  ";color:#e879a7}
-.girls-page input{border:1px solid #f2b8d0!important;border-radius:12px!important;background:#fffafd!important}
-.girls-page input:focus{outline:none;border-color:#db4f86!important;box-shadow:0 0 0 3px rgba(219,79,134,.13)}
-.girls-page .primary-btn{background:linear-gradient(115deg,#be185d,#ec4899)!important;border:0!important;box-shadow:0 7px 16px rgba(190,24,93,.17)}
-.girls-page .student-row{background:#fff7fb;border:1px solid #f5c7da;border-right:4px solid #ec4899;border-radius:15px}
-.girls-page .student-row:nth-child(even){background:#fff0f6}
-.girls-page .student-row strong{color:#831843}
-.girls-page .student-actions .primary-btn{background:linear-gradient(115deg,#be185d,#ec4899)!important}
-@media(max-width:600px){.girls-page .group-card{padding:18px}}
+.girls-page .quiz-container{position:relative}
+.girls-page .quiz-header{background:linear-gradient(115deg,#9d174d,#db4f86 58%,#f08ab2);color:#fff;border:1px solid rgba(255,255,255,.45);box-shadow:0 12px 30px rgba(190,24,93,.16);border-radius:0 0 22px 22px}
+.girls-page .quiz-header .logo{color:#fff}
+.girls-page .results-title{color:#9d174d;font-weight:900;text-shadow:0 2px 0 #fff}
+.girls-page .results-title:before{content:"✿  ";color:#e879a7}
+.girls-page .results-title:after{content:"  ✿";color:#e879a7}
+.girls-page .top-note{color:#a21caf;background:linear-gradient(90deg,#fff0f6,#fce7f3,#fff0f6);border:1px solid #fbcfe8;border-radius:999px;padding:10px 14px;max-width:max-content;margin:0 auto 22px}
+.girls-page .quiz-form{border:1px solid #f3bfd5!important;border-radius:22px!important;background:rgba(255,255,255,.86)!important;box-shadow:0 16px 38px rgba(190,24,93,.09)}
+.girls-page .result-row{background:#fffafd;border-bottom:1px solid #f8d7e5;transition:background .2s ease,transform .2s ease}
+.girls-page .result-row:nth-child(even){background:#fff3f8}
+.girls-page .result-row:hover{background:#ffe6f0;transform:translateX(-2px)}
+.girls-page .rank{color:#be185d;background:#fce7f3;border-radius:12px;padding:7px 0}
+.girls-page .student-name{color:#6b2143}
+.girls-page .points{color:#9d174d;background:#fce7f3;border:1px solid #fbcfe8;border-radius:999px;padding:6px 12px}
+.girls-page .result-row.top{background:linear-gradient(90deg,#fff0f6,#fce7f3);border-right:5px solid #ec4899}
+.girls-page .result-row.rank-1{background:linear-gradient(90deg,#fff1f7,#fbcfe8);border-right-color:#db2777}
+.girls-page .result-row.rank-2{background:linear-gradient(90deg,#fff7fb,#fce7f3);border-right-color:#c084a5}
+.girls-page .result-row.rank-3{background:linear-gradient(90deg,#fff4f8,#fbd5e5);border-right-color:#be6b91}
+.girls-page .top-label{color:#9d174d;background:#f9a8d4}
+.girls-page .empty{color:#9d174d;padding:28px}
+@media(max-width:480px){.girls-page .top-note{border-radius:16px}.girls-page .points{padding:5px 9px}}
 
-</style></head><body class="girls-page"><div class="quiz-container"><header class="quiz-header"><div class="logo">خشتەی ئافرەتان</div><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><a href="students.html">گەڕانەوە</a><a href="teacher.html">داشبۆرد</a><a href="girls-results.html" target="_blank">بینینی خشتە</a><button id="logout-button" class="secondary-btn" type="button">چوونەدەرەوە</button></div></header><main class="create-content"><section class="quiz-form group-card"><h1>خشتەی ئافرەتان</h1><p class="subtitle">ئەم بەشە تەنها بۆ بەڕێوەبردنی خوێندکارانی کچیە.</p><label for="student-name">ناوی خوێندکار</label><input id="student-name" type="text" placeholder="ناوی خوێندکار"><label for="student-point">خاڵ</label><input id="student-point" type="number" min="0" step="any" placeholder="خاڵ"><button id="add-button" class="primary-btn create-btn" type="button">زیادکردنی خوێندکاری کچ</button><hr><h2>خوێندکارانی ئافرەتان</h2><div id="students-list">چاوەڕێ بکە...</div></section></main></div>
-<script type="module">
-import {database,auth} from "./js/firebase.js";
-import {onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {ref,get,push,set,remove} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-const path="FemaleStudentPoints"; const list=document.getElementById('students-list');
-onAuthStateChanged(auth,user=>{if(!user){location.href='login.html';return;}load();});
-document.getElementById('add-button').addEventListener('click',async()=>{const name=document.getElementById('student-name').value.trim();const point=document.getElementById('student-point').value.trim();if(!name)return alert('تکایە ناوی خوێندکار بنووسە.');if(point===''||!Number.isFinite(Number(point))||Number(point)<0)return alert('تکایە خاڵێکی دروست بنووسە.');try{await set(push(ref(database,path)),{name,point:Number(point)});document.getElementById('student-name').value='';document.getElementById('student-point').value='';await load();}catch(e){console.error(e);alert('هەڵەیەک ڕوویدا.');}});
-async function load(){try{const snap=await get(ref(database,path));if(!snap.exists()){list.innerHTML='<p>هێشتا هیچ خوێندکارێک زیاد نەکراوە.</p>';return;}const rows=Object.entries(snap.val()).sort((a,b)=>Number(b[1].point||0)-Number(a[1].point||0));list.innerHTML=rows.map(([key,s])=>`<div class="student-row"><div><strong>${esc(s.name||'')}</strong><div>${esc(String(s.point??0))} خاڵ</div></div><div class="student-actions"><button class="primary-btn" data-act="edit" data-key="${key}">دەستکاری</button><button class="secondary-btn" data-act="del" data-key="${key}">سڕینەوە</button></div></div>`).join('');list.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>b.dataset.act==='edit'?edit(b.dataset.key):del(b.dataset.key)));}catch(e){console.error(e);list.innerHTML='<p>هەڵە لە بارکردنی داتا.</p>';}}
-async function edit(key){const r=ref(database,path+'/'+key);const s=(await get(r)).val();if(!s)return;const name=prompt('ناوی خوێندکار:',s.name||'');if(name===null)return;if(!name.trim())return alert('ناو نابێت بەتاڵ بێت.');const point=prompt('خاڵ:',String(s.point??0));if(point===null)return;if(point.trim()===''||!Number.isFinite(Number(point))||Number(point)<0)return alert('خاڵی دروست بنووسە.');await set(r,{name:name.trim(),point:Number(point)});load();}
-async function del(key){if(!confirm('دڵنیایت لە سڕینەوە؟'))return;await remove(ref(database,path+'/'+key));load();}
-document.getElementById('logout-button').addEventListener('click',async()=>{await signOut(auth);location.href='login.html';});
+</style></head><body class="girls-page"><div class="quiz-container"><header class="quiz-header"><div class="logo">ئەنجامی کچان</div></header><main class="create-content results-wrap"><h1 class="results-title">خشتەی ئەنجامی کچان</h1><p class="top-note">⭐ 11 خوێندکاری یەکەمی ئەم خشتەیە بە شێوەیەکی تایبەت دیاریکراون ⭐</p><section class="quiz-form" style="padding:0;overflow:hidden"><div id="results"><p class="empty">چاوەڕێ بکە...</p></div></section></main>
+        <!-- =====================================================
+             CONTACT ME
+             ===================================================== -->
+
+        <div class="contact-footer">
+
+
+            <div class="contact-decoration">
+
+                ❖ ✦ ❖
+
+            </div>
+
+
+            <h2>
+
+                پەیوەندیم پێوە بکە
+
+            </h2>
+
+
+            <p>
+
+                ئەگەر پێویستت بە دروستکردنی ئەپلیکەیشنی
+
+                ئەندرۆید، وێبسایت یان سیستەمێکی تایبەت هەیە،
+
+                پەیوەندیم پێوە بکە.
+
+            </p>
+
+
+            <div class="contact-info">
+
+
+                <a
+                    href="tel:+9647503037379"
+                    class="contact-item">
+
+                    ☏
+
+                    <span dir="ltr">
+
+                        750 303 7379
+
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="https://www.facebook.com/kossarsherzad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    فەیسبووك
+
+                </a>
+
+
+
+                <a
+                    href="https://www.instagram.com/kossarsherzad/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    ئینستاگرام
+
+                </a>
+
+
+
+                <a
+                    href="https://www.linkedin.com/in/kossar-sherzad-332702416/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="contact-item">
+
+                    لینکید ئین
+
+                </a>
+
+
+            </div>
+
+
+            <div class="contact-decoration">
+
+                ❖ ✦ ❖
+
+            </div>
+
+
+            <p class="copyright">
+
+                دروستکردنی کۆسار شێرزاد
+
+            </p>
+
+
+        </div>
+
+</div>
+<script type="module">import {database} from "./js/firebase.js";import {ref,get} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const root=document.getElementById('results');try{const snap=await get(ref(database,'FemaleStudentPoints'));if(!snap.exists()){root.innerHTML='<p class="empty">هێشتا هیچ ئەنجامێک نییە.</p>';}else{const rows=Object.values(snap.val()).sort((a,b)=>Number(b.point||0)-Number(a.point||0));root.innerHTML=rows.map((s,i)=>{const rank=i+1;const top=rank<=11;const medal=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';return `<div class="result-row ${top?'top':''} ${rank<=3?'rank-'+rank:''}"><div class="rank">${rank}</div><div class="student-name">${medal?`<span class="medal">${medal}</span>`:''}${esc(s.name||'')}${top?'<span class="top-label">باشترین 11</span>':''}</div><div class="points">${esc(String(s.point??0))} خاڵ</div></div>`;}).join('');}}catch(e){console.error(e);root.innerHTML='<p class="empty">هەڵەیەک ڕوویدا لە بارکردنی ئەنجامەکان.</p>';}
 function esc(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 </script></body></html>
